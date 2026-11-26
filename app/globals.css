@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-med-blue: #087E9B;
+  --color-deep-blue: #103B50;
+  --color-forest: #356B50;
+  --color-sand: #F4EFE5;
+  --color-sand-soft: #FAF8F3;
+  --color-terracotta: #C47B55;
+  --color-ink: #102530;
+  --color-muted: #51636D;
+
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  --font-arabic: var(--font-noto-arabic), var(--font-jakarta), sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #FFFFFF;
+    color: #102530;
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+
+  html[dir="ltr"] body {
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #087E9B;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Museum & Editorial Drop Cap (respects RTL/LTR automatically) */
+.editorial-dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-size: 3.1rem;
+  font-weight: 600;
+  line-height: 0.85;
+  float: inline-start;
+  margin-inline-end: 0.65rem;
+  margin-top: 0.25rem;
+  color: #103B50;
+}
+
+/* Print-ready A4 Field Dossier Styling */
+@media print {
+  header,
+  footer,
+  nav[aria-label="Fil d'Ariane"],
+  .no-print,
+  button.no-print {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #FFFFFF !important;
+    color: #102530 !important;
+    font-size: 11pt !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+
+  section,
+  article {
+    break-inside: avoid-page;
+  }
+}
+

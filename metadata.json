@@ -1,0 +1,6 @@
+{
+  "name": "Béjaïa Explorer – اكتشف بجاية",
+  "description": "Portail touristique officiel de découverte de la Wilaya de Béjaïa en Algérie : plages, montagnes, Parc national de Gouraya, patrimoine hammadite, villages kabyles, circuits et carte interactive.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,36 @@
+{
+  "_status": "validation_pending",
+  "_note": "Structure prête pour la traduction kabyle (Taqvaylit / Tamazight) validée. Les chaînes non encore validées officiellement basculent proprement vers le français afin de ne jamais afficher de traduction approximative comme officielle.",
+  "brand": {
+    "name": "Béjaïa Explorer · Bgayet",
+    "arabicName": "ⴱⴳⴰⵢⴻⵜ",
+    "tagline": "Portail touristique et culturel de la Wilaya de Béjaïa (Bgayet)"
+  },
+  "nav": {
+    "home": "Accueil",
+    "destinations": "Destinations",
+    "categories": "Catégories",
+    "circuits": "Circuits",
+    "map": "Carte",
+    "culture": "Culture",
+    "history": "Histoire",
+    "guide": "Guide pratique",
+    "about": "À propos",
+    "contact": "Contact",
+    "favorites": "Carnet",
+    "search": "Rechercher",
+    "menu": "Menu"
+  },
+  "hero": {
+    "kicker": "Bgayet · Tamurt n Leqbayel · Méditerranée",
+    "title": "Béjaïa, entre mer, montagne et histoire",
+    "subtitle": "Explorez une destination exceptionnelle au cœur de la Méditerranée (Version Taqvaylit en cours de validation linguistique officielle).",
+    "ctaDestinations": "Explorer les destinations",
+    "ctaCircuits": "Découvrir les circuits",
+    "searchPlaceholder": "Rechercher un lieu à Bgayet (Cap Carbon, Gouraya, Aokas)...",
+    "searchButton": "Rechercher"
+  },
+  "common": {
+    "kabyleNotice": "Taqvaylit / Tamazight (ⴱⴳⴰⵢⴻⵜ) : l'architecture multilingue est prête. Les textes complets seront publiés après validation linguistique officielle afin de préserver la qualité de la langue ; le français est affiché en repli vérifié."
+  }
+}
