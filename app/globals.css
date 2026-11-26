@@ -2,6 +2,26 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html.theme-view-transitioning *,
+html.theme-view-transitioning *::before,
+html.theme-view-transitioning *::after {
+  transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
 :root {
   --surface-page: #FFFFFF;
   --surface-card: #FFFFFF;
@@ -58,26 +78,6 @@
     background-color: var(--surface-page);
     color: var(--ink-primary);
     transition: background-color 180ms ease, color 180ms ease;
-  }
-
-  html.theme-view-transitioning *,
-  html.theme-view-transitioning *::before,
-  html.theme-view-transitioning *::after {
-    transition: none !important;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
-
-  ::view-transition-old(root) {
-    z-index: 1;
-  }
-
-  ::view-transition-new(root) {
-    z-index: 9999;
   }
 
   html[dir="rtl"] body {

@@ -326,9 +326,10 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
                 `circle(0px at ${x}px ${y}px)`,
                 `circle(${endRadius}px at ${x}px ${y}px)`,
               ],
+              filter: ['brightness(1.06)', 'brightness(1)'],
             },
             {
-              duration: 520,
+              duration: 1000,
               easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
               pseudoElement: '::view-transition-new(root)',
             }
