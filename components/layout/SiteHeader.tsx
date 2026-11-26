@@ -151,14 +151,13 @@ export function SiteHeader() {
               onClick={() => setSearchOpen(true)}
               aria-label={t('nav.search')}
               title={`${t('nav.search')} (Ctrl+K)`}
-              className="inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md border border-[#103B50]/12 bg-[#FAF8F3] hover:bg-[#F4EFE5] text-xs font-medium text-[#103B50] transition-colors shrink-0"
+              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
             >
-              <Search className="w-3.5 h-3.5 text-[#087E9B]" />
-              <span className="hidden sm:inline">{t('nav.search')}</span>
+              <Search className="w-3.5 h-3.5" strokeWidth={2} />
             </button>
 
             <div className="hidden md:block">
-              <PWAInstallButton compact />
+              <PWAInstallButton headerMinimal />
             </div>
 
             {(() => {
@@ -173,7 +172,7 @@ export function SiteHeader() {
                   lang={currentLoc.code}
                   title={`Langue active : ${currentLoc.title} — Cliquer pour passer à : ${nextLoc.title}`}
                   aria-label={`Langue active : ${currentLoc.title} — Prochaine langue : ${nextLoc.title}`}
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[#103B50]/15 bg-[#FAF8F3] hover:bg-[#103B50] hover:text-white hover:border-[#103B50] text-[#103B50] dark:border-[#E6F0F5]/20 dark:bg-[#132633] dark:text-[#EDF3F7] dark:hover:bg-[#3AB8D6] dark:hover:text-[#0B1720] dark:hover:border-[#3AB8D6] text-[11px] font-bold tracking-tight uppercase transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087E9B] dark:focus-visible:ring-[#3AB8D6]"
+                  className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] text-xs font-bold tracking-tight uppercase transition-[color] duration-150 shrink-0"
                 >
                   {currentLoc.label}
                 </button>
@@ -190,40 +189,50 @@ export function SiteHeader() {
               title={
                 resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
               }
-              className="inline-flex items-center justify-center w-9 h-9 rounded-md border border-[#103B50]/12 bg-[#FAF8F3] hover:bg-[#F4EFE5] text-[#103B50] transition-colors shrink-0"
+              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
             >
-              <Moon className="w-4 h-4 text-[#087E9B] dark:hidden" />
-              <Sun className="w-4 h-4 hidden dark:block text-[#E29A74]" />
+              <Moon className="w-3.5 h-3.5 dark:hidden" strokeWidth={2} />
+              <Sun className="w-3.5 h-3.5 hidden dark:block" strokeWidth={2} />
             </button>
 
             <button
               type="button"
               onClick={() => setItineraryOpen(true)}
-              aria-label={t('itinerary.buttonLabel')}
-              title={t('itinerary.buttonLabel')}
-              className="relative inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md border border-[#103B50]/12 bg-[#FAF8F3] hover:bg-[#F4EFE5] text-xs font-medium text-[#103B50] transition-colors shrink-0"
+              aria-label={
+                customCircuitSlugs.length > 0
+                  ? `${t('itinerary.buttonLabel')} (${customCircuitSlugs.length})`
+                  : t('itinerary.buttonLabel')
+              }
+              title={
+                customCircuitSlugs.length > 0
+                  ? `${t('itinerary.buttonLabel')} (${customCircuitSlugs.length})`
+                  : t('itinerary.buttonLabel')
+              }
+              className="group inline-flex items-center gap-1.5 px-2.5 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-xs font-medium text-[#103B50] shrink-0"
             >
-              <Route className="w-4 h-4 text-[#087E9B]" />
+              <Route
+                className="w-3.5 h-3.5 text-[#087E9B] group-hover:text-[#103B50] dark:group-hover:text-white transition-[color,stroke] duration-150 shrink-0"
+                strokeWidth={2}
+              />
               <span className="hidden lg:inline">{t('itinerary.buttonLabel')}</span>
-              {customCircuitSlugs.length > 0 && (
-                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#087E9B] text-white text-[10px] font-semibold flex items-center justify-center tabular-nums">
-                  {customCircuitSlugs.length}
-                </span>
-              )}
             </button>
 
             <button
               type="button"
               onClick={() => setFavoritesOpen(true)}
-              aria-label={t('nav.favorites')}
-              className="relative inline-flex items-center justify-center w-9 h-9 rounded-md text-[#103B50] hover:bg-[#F4EFE5] transition-colors shrink-0"
+              aria-label={
+                favorites.length > 0
+                  ? `${t('nav.favorites')} (${favorites.length})`
+                  : t('nav.favorites')
+              }
+              title={
+                favorites.length > 0
+                  ? `${t('nav.favorites')} (${favorites.length})`
+                  : t('nav.favorites')
+              }
+              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
             >
-              <Heart className="w-5 h-5" />
-              {favorites.length + visitedSlugs.length > 0 && (
-                <span className="absolute -top-0.5 -end-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#C47B55] text-white text-[10px] font-semibold flex items-center justify-center tabular-nums">
-                  {favorites.length}
-                </span>
-              )}
+              <Heart className="w-3.5 h-3.5" strokeWidth={2} />
             </button>
 
             <button
@@ -231,9 +240,13 @@ export function SiteHeader() {
               onClick={() => setMobileMenuOpen((v) => !v)}
               aria-label={t('nav.menu')}
               aria-expanded={mobileMenuOpen}
-              className="xl:hidden inline-flex items-center justify-center w-9 h-9 rounded-md text-[#103B50] hover:bg-[#F4EFE5] transition-colors shrink-0"
+              className="xl:hidden inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? (
+                <X className="w-3.5 h-3.5" strokeWidth={2} />
+              ) : (
+                <Menu className="w-3.5 h-3.5" strokeWidth={2} />
+              )}
             </button>
           </div>
         </div>

@@ -68,7 +68,13 @@ export function OfflineIndicator() {
   );
 }
 
-export function PWAInstallButton({ compact = false }: { compact?: boolean }) {
+export function PWAInstallButton({
+  compact = false,
+  headerMinimal = false,
+}: {
+  compact?: boolean;
+  headerMinimal?: boolean;
+}) {
   const { t } = useApp();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -123,12 +129,18 @@ export function PWAInstallButton({ compact = false }: { compact?: boolean }) {
       <button
         type="button"
         onClick={handleInstall}
-        className={`inline-flex items-center gap-1.5 rounded-md border border-[#087E9B]/30 bg-[#FAF8F3] hover:bg-[#087E9B] text-[#103B50] hover:text-white transition-colors whitespace-nowrap shrink-0 ${
-          compact ? 'px-2.5 py-1.5 text-xs font-medium' : 'px-3 py-1.5 text-xs font-medium'
-        }`}
+        aria-label={t('pwa.installApp')}
+        title={t('pwa.installApp')}
+        className={
+          headerMinimal
+            ? 'group inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0'
+            : `inline-flex items-center gap-1.5 rounded-md border border-[#087E9B]/30 bg-[#FAF8F3] hover:bg-[#087E9B] text-[#103B50] hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+                compact ? 'px-2.5 py-1.5 text-xs font-medium' : 'px-3 py-1.5 text-xs font-medium'
+              }`
+        }
       >
-        <Download className="w-3.5 h-3.5 shrink-0" />
-        <span>{t('pwa.installApp')}</span>
+        <Download className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+        {!headerMinimal && <span>{t('pwa.installApp')}</span>}
       </button>
     );
   }
@@ -139,10 +151,16 @@ export function PWAInstallButton({ compact = false }: { compact?: boolean }) {
         <button
           type="button"
           onClick={() => setShowIOSGuide(true)}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#103B50]/20 bg-[#FAF8F3] text-xs font-medium text-[#103B50] hover:bg-[#F4EFE5] transition-colors whitespace-nowrap shrink-0"
+          aria-label={t('pwa.installIOS')}
+          title={t('pwa.installIOS')}
+          className={
+            headerMinimal
+              ? 'inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0'
+              : 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#103B50]/20 bg-[#FAF8F3] text-xs font-medium text-[#103B50] hover:bg-[#F4EFE5] transition-colors whitespace-nowrap shrink-0'
+          }
         >
-          <Smartphone className="w-3.5 h-3.5 shrink-0" />
-          <span>{t('pwa.installIOS')}</span>
+          <Smartphone className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+          {!headerMinimal && <span>{t('pwa.installIOS')}</span>}
         </button>
 
         {showIOSGuide && (

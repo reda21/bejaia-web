@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -31,6 +31,7 @@ import {
 import { HistoryAiQuiz } from '@/components/history/HistoryAiQuiz';
 import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
 import { ArticleSaveActions } from '@/components/history/ArticleSaveActions';
+import { ArticleShareButton } from '@/components/history/ArticleShareButton';
 import { HistorySavedBar } from '@/components/history/HistorySavedBar';
 import { InteractiveHistoryTimeline } from '@/components/history/InteractiveHistoryTimeline';
 import { getDestinationBySlug } from '@/data/destinations';
@@ -134,10 +135,40 @@ export function HistoryEncyclopediaClient() {
 
   const proseSizeClass = getProseSizeClass(readerPrefs.fontScale);
 
+  useEffect(() => {
+    const tabParam = searchParams.get('tab') as HistoryTab | null;
+    if (
+      tabParam === 'timeline' ||
+      tabParam === 'figures' ||
+      tabParam === 'medina' ||
+      tabParam === 'glossary' ||
+      tabParam === 'nature' ||
+      tabParam === 'quiz'
+    ) {
+      queueMicrotask(() => setActiveTab(tabParam));
+    }
+
+    const sectionParam = searchParams.get('section');
+    const hashTarget =
+      typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : '';
+    const targetAnchor = sectionParam || hashTarget;
+    if (targetAnchor) {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const el = document.getElementById(targetAnchor);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 80);
+      });
+    }
+  }, [searchParams]);
+
   const eraArticles = useMemo<ImmersiveArticleItem[]>(
     () =>
       HISTORICAL_ERAS.map((era) => ({
         id: era.id,
+        anchorId: era.slug,
         kind: 'era',
         order: era.order,
         kicker: `${era.order} · ${lt(era.dateRange)}`,
@@ -159,6 +190,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       HISTORICAL_FIGURES.map((fig, idx) => ({
         id: fig.id,
+        anchorId: fig.slug,
         kind: 'figure',
         order: `0${idx + 1}`,
         kicker: `0${idx + 1} · ${lt(fig.dates)}`,
@@ -176,6 +208,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       MEDINA_STRATA.map((layer) => ({
         id: layer.id,
+        anchorId: layer.id,
         kind: 'medina',
         order: layer.order,
         kicker: `${layer.order} · ${lt(layer.period)}`,
@@ -191,6 +224,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       NATURALIST_DOSSIERS.map((dossier, idx) => ({
         id: dossier.id,
+        anchorId: dossier.slug,
         kind: 'nature',
         order: `0${idx + 1}`,
         kicker: `0${idx + 1} · ${lt(dossier.ecosystemType)}`,
@@ -242,6 +276,7 @@ export function HistoryEncyclopediaClient() {
   const handleOpenOfflineArticle = (payload: OfflineHistoryArticlePayload) => {
     setOfflineReaderArticle({
       id: payload.id,
+      anchorId: payload.slug,
       kind: payload.kind,
       order: payload.order,
       kicker: `${payload.order ? `${payload.order} · ` : ''}${lt(payload.kicker)}`,
@@ -429,6 +464,13 @@ export function HistoryEncyclopediaClient() {
                               kind="era"
                               coverImageSrc={era.coverImage.src}
                             />
+                            <ArticleShareButton
+                              tab="timeline"
+                              anchorId={era.slug}
+                              title={lt(era.title)}
+                              kicker={lt(era.dateRange)}
+                              excerpt={lt(era.summary)}
+                            />
                             <ArticleAudioPlayer
                               articleId={era.id}
                               title={lt(era.title)}
@@ -566,6 +608,13 @@ export function HistoryEncyclopediaClient() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <ArticleSaveActions articleId={fig.id} kind="figure" />
+                        <ArticleShareButton
+                          tab="figures"
+                          anchorId={fig.slug}
+                          title={lt(fig.name)}
+                          kicker={lt(fig.dates)}
+                          excerpt={lt(fig.bejaiaConnection)}
+                        />
                         <ArticleAudioPlayer
                           articleId={fig.id}
                           title={lt(fig.name)}
@@ -659,6 +708,13 @@ export function HistoryEncyclopediaClient() {
                         : 'Traces archéologiques ponctuelles'}
                     </span>
                     <ArticleSaveActions articleId={layer.id} kind="medina" />
+                    <ArticleShareButton
+                      tab="medina"
+                      anchorId={layer.id}
+                      title={lt(layer.title)}
+                      kicker={lt(layer.period)}
+                      excerpt={lt(layer.description)}
+                    />
                     <ArticleAudioPlayer
                       articleId={layer.id}
                       title={lt(layer.title)}
@@ -834,6 +890,13 @@ export function HistoryEncyclopediaClient() {
                           articleId={dossier.id}
                           kind="nature"
                           coverImageSrc={dossier.coverImage.src}
+                        />
+                        <ArticleShareButton
+                          tab="nature"
+                          anchorId={dossier.slug}
+                          title={lt(dossier.title)}
+                          kicker={lt(dossier.ecosystemType)}
+                          excerpt={lt(dossier.summary)}
                         />
                         <ArticleAudioPlayer
                           articleId={dossier.id}

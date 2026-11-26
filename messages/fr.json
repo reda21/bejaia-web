@@ -374,7 +374,14 @@
     "facebook": "Facebook",
     "telegram": "Telegram",
     "email": "E-mail",
-    "messagePrefix": "Découvrez cette destination à Béjaïa :"
+    "messagePrefix": "Découvrez cette destination à Béjaïa :",
+    "historyPanelTitle": "Partager cet article historique",
+    "historyPanelSubtitle": "Diffusez un extrait de l'encyclopédie avec un lien direct vers cette section.",
+    "excerptLabel": "Extrait encyclopédique",
+    "copyExcerptLink": "Copier extrait + lien",
+    "xTwitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "historyPrefix": "Béjaïa Explorer · Encyclopédie historique"
   },
   "galleryUi": {
     "openFullscreen": "Galerie plein écran",

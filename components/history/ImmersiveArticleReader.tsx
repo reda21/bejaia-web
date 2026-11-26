@@ -17,11 +17,14 @@ import { useApp } from '@/components/providers/AppProviders';
 import { ResilientImage } from '@/components/ui/ResilientImage';
 import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
 import { ArticleSaveActions } from '@/components/history/ArticleSaveActions';
+import { ArticleShareButton } from '@/components/history/ArticleShareButton';
+import { getHistoryTabForKind } from '@/services/historyArticlesService';
 import { getDestinationBySlug } from '@/data/destinations';
 import type { HistorySectionKind, MediaAsset, SourceCitation } from '@/types';
 
 export interface ImmersiveArticleItem {
   id: string;
+  anchorId?: string;
   kind?: HistorySectionKind;
   order?: string;
   kicker: string;
@@ -303,12 +306,20 @@ export function ImmersiveArticleReader({
 
           <div className="pt-2 text-start space-y-3">
             {article.kind && (
-              <div className="flex justify-center">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 <ArticleSaveActions
                   articleId={article.id}
                   kind={article.kind}
                   coverImageSrc={article.coverImage?.src}
                   compact={false}
+                  inverted={paperTheme === 'night'}
+                />
+                <ArticleShareButton
+                  tab={getHistoryTabForKind(article.kind)}
+                  anchorId={article.anchorId ?? article.id}
+                  title={article.title}
+                  kicker={article.kicker}
+                  excerpt={article.summary}
                   inverted={paperTheme === 'night'}
                 />
               </div>

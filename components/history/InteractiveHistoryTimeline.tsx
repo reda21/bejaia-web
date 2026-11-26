@@ -16,6 +16,7 @@ import { getDestinationBySlug } from '@/data/destinations';
 import { HISTORICAL_ERAS } from '@/data/history';
 import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
 import { ArticleSaveActions } from '@/components/history/ArticleSaveActions';
+import { ArticleShareButton } from '@/components/history/ArticleShareButton';
 import type { EraSlug, LocalizedText } from '@/types';
 
 interface InteractiveHistoryTimelineProps {
@@ -272,6 +273,14 @@ export function InteractiveHistoryTimeline({
               articleId={activeEra.id}
               kind="era"
               coverImageSrc={activeEra.coverImage?.src}
+            />
+
+            <ArticleShareButton
+              tab="timeline"
+              anchorId={activeEra.slug}
+              title={lt(activeEra.title)}
+              kicker={lt(activeEra.dateRange)}
+              excerpt={lt(activeEra.summary)}
             />
 
             <ArticleAudioPlayer

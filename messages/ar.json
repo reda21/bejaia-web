@@ -374,7 +374,14 @@
     "facebook": "فيسبوك",
     "telegram": "تيليجرام",
     "email": "البريد الإلكتروني",
-    "messagePrefix": "اكتشف هذه الوجهة السياحية في بجاية:"
+    "messagePrefix": "اكتشف هذه الوجهة السياحية في بجاية:",
+    "historyPanelTitle": "مشاركة هذا المقال التاريخي",
+    "historyPanelSubtitle": "شارك مقتطفاً من الموسوعة عبر رابط مباشر لهذه الفقرة.",
+    "excerptLabel": "مقتطف من الموسوعة",
+    "copyExcerptLink": "نسخ المقتطف والرابط",
+    "xTwitter": "X (تويتر)",
+    "linkedin": "لينكدإن",
+    "historyPrefix": "اكتشف بجاية · الموسوعة التاريخية"
   },
   "galleryUi": {
     "openFullscreen": "معرض بملء الشاشة",

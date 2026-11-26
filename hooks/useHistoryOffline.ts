@@ -74,7 +74,11 @@ export function useHistoryOffline() {
   useEffect(() => {
     let active = true;
 
-    void syncFromCaches();
+    void readCachedIdsDirectly().then((ids) => {
+      if (active) {
+        setCachedIds(ids);
+      }
+    });
 
     const onLocalSync = (event: Event) => {
       if (!active) return;
