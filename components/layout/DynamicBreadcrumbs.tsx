@@ -103,7 +103,7 @@ export function DynamicBreadcrumbs() {
   };
 
   return (
-    <div className="no-print bg-[#FAF8F3] border-b border-[#103B50]/10">
+    <div className="breadcrumbs-bar no-print bg-[#FAF8F3] border-b border-[#103B50]/10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

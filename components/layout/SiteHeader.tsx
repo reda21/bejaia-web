@@ -21,6 +21,7 @@ import {
   Keyboard,
   Share2,
   Check,
+  BookOpen,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
 import { DESTINATIONS, getDestinationBySlug } from '@/data/destinations';
@@ -82,6 +83,7 @@ export function SiteHeader() {
     null
   );
   const [copiedShare, setCopiedShare] = useState(false);
+  const [immersiveReading, setImmersiveReading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -91,6 +93,7 @@ export function SiteHeader() {
   const itineraryBtnRef = useRef<HTMLButtonElement>(null);
   const favoritesBtnRef = useRef<HTMLButtonElement>(null);
   const shareBtnRef = useRef<HTMLButtonElement>(null);
+  const readingBtnRef = useRef<HTMLButtonElement>(null);
   const mobileMenuBtnRef = useRef<HTMLButtonElement>(null);
   const shortcutFlashTimerRef = useRef<number | null>(null);
   const shortcutToastTimerRef = useRef<number | null>(null);
@@ -257,6 +260,28 @@ export function SiteHeader() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [favoritesOpen, setFavoritesOpen]);
+
+  // Toggle html.immersive-reading class & support Escape to exit reading mode
+  useEffect(() => {
+    document.documentElement.classList.toggle('immersive-reading', immersiveReading);
+    if (!immersiveReading) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setImmersiveReading(false);
+        window.requestAnimationFrame(() => {
+          readingBtnRef.current?.focus({ preventScroll: true });
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.documentElement.classList.remove('immersive-reading');
+    };
+  }, [immersiveReading]);
 
   const navItems = [
     { href: '/', label: t('nav.home') },
@@ -608,6 +633,27 @@ export function SiteHeader() {
                 id="tooltip-nav-share"
                 label={copiedShare ? t('nav.shareCopiedLabel') : t('nav.shareLabel')}
                 description={t('nav.tooltipShare')}
+              />
+            </div>
+
+            <div className="relative inline-flex items-center">
+              <button
+                ref={readingBtnRef}
+                type="button"
+                onClick={() => setImmersiveReading((v) => !v)}
+                aria-label={`${
+                  immersiveReading ? t('nav.exitReadingMode') : t('nav.readingModeLabel')
+                } — ${t('nav.tooltipReadingMode')}`}
+                aria-describedby="tooltip-nav-reading"
+                aria-pressed={immersiveReading}
+                className="peer nav-action-button"
+              >
+                <BookOpen className="w-[18px] h-[18px]" strokeWidth={2} />
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-reading"
+                label={t('nav.readingModeLabel')}
+                description={t('nav.tooltipReadingMode')}
               />
             </div>
 
@@ -998,6 +1044,24 @@ export function SiteHeader() {
             </div>
           </div>
         </div>
+      )}
+
+      {immersiveReading && (
+        <button
+          type="button"
+          onClick={() => {
+            setImmersiveReading(false);
+            window.requestAnimationFrame(() => {
+              readingBtnRef.current?.focus({ preventScroll: true });
+            });
+          }}
+          aria-label={t('nav.exitReadingMode')}
+          className="no-print fixed top-4 end-4 z-50 inline-flex items-center gap-2 rounded-md border border-[#103B50]/15 bg-white/95 backdrop-blur-md px-3.5 py-2 text-xs font-medium text-[#103B50] shadow-lg hover:bg-[#F4EFE5] transition-colors"
+        >
+          <BookOpen className="w-3.5 h-3.5 text-[#087E9B]" strokeWidth={2} />
+          <span>{t('nav.exitReadingMode')}</span>
+          <X className="w-3.5 h-3.5 text-[#51636D]" strokeWidth={2} />
+        </button>
       )}
 
       <GlobalSearchModal />

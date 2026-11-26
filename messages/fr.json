@@ -34,6 +34,9 @@
     "shareLabel": "Partager la page",
     "shareCopiedLabel": "Lien copié",
     "shareCopiedToast": "Lien de la page copié dans le presse-papiers",
+    "readingModeLabel": "Mode Lecture",
+    "exitReadingMode": "Quitter le mode lecture",
+    "tooltipReadingMode": "Masquer la navigation pour une lecture immersive",
     "shortcutActivated": "Raccourci activé"
   },
   "hero": {

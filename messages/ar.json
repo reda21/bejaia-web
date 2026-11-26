@@ -34,6 +34,9 @@
     "shareLabel": "مشاركة الصفحة",
     "shareCopiedLabel": "تم نسخ الرابط",
     "shareCopiedToast": "تم نسخ رابط الصفحة إلى الحافظة",
+    "readingModeLabel": "وضع القراءة",
+    "exitReadingMode": "إنهاء وضع القراءة",
+    "tooltipReadingMode": "إخفاء شريط التنقل والتذييل لقراءة مريحة",
     "shortcutActivated": "تم تفعيل الاختصار"
   },
   "hero": {
