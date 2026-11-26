@@ -15,6 +15,7 @@ import { useApp } from '@/components/providers/AppProviders';
 import { getDestinationBySlug } from '@/data/destinations';
 import { HISTORICAL_ERAS } from '@/data/history';
 import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
+import { ArticleSaveActions } from '@/components/history/ArticleSaveActions';
 import type { EraSlug, LocalizedText } from '@/types';
 
 interface InteractiveHistoryTimelineProps {
@@ -267,6 +268,12 @@ export function InteractiveHistoryTimeline({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <ArticleSaveActions
+              articleId={activeEra.id}
+              kind="era"
+              coverImageSrc={activeEra.coverImage?.src}
+            />
+
             <ArticleAudioPlayer
               articleId={`timeline-${activeEra.id}`}
               title={lt(activeEra.title)}

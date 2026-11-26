@@ -1,6 +1,14 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { translate, getLocalizedText, isRtlLocale } from '@/lib/i18n';
 import type {
   CustomCircuit,
@@ -16,6 +24,7 @@ import { OfflineIndicator, ServiceWorkerRegistrar } from '@/components/pwa/PWACo
 interface AppContextValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
+  isLocaleTransitioning: boolean;
   isRtl: boolean;
   theme: ThemePreference;
   resolvedTheme: 'light' | 'dark';
@@ -80,6 +89,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [customCircuitSlugs, setCustomCircuitSlugsState] = useState<string[]>([]);
   const [savedCircuits, setSavedCircuits] = useState<CustomCircuit[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isLocaleTransitioning, setIsLocaleTransitioning] = useState(false);
+  const localeFadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -215,9 +226,41 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
+  useEffect(() => {
+    return () => {
+      if (localeFadeTimerRef.current) {
+        clearTimeout(localeFadeTimerRef.current);
+      }
+    };
   }, []);
+
+  const setLocale = useCallback(
+    (next: Locale) => {
+      if (next === locale) return;
+      if (localeFadeTimerRef.current) {
+        clearTimeout(localeFadeTimerRef.current);
+      }
+
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (prefersReducedMotion) {
+        setLocaleState(next);
+        setIsLocaleTransitioning(false);
+        return;
+      }
+
+      setIsLocaleTransitioning(true);
+      localeFadeTimerRef.current = setTimeout(() => {
+        setLocaleState(next);
+        requestAnimationFrame(() => {
+          setIsLocaleTransitioning(false);
+        });
+      }, 150);
+    },
+    [locale]
+  );
 
   const setTheme = useCallback((next: ThemePreference) => {
     setThemeState(next);
@@ -450,6 +493,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     () => ({
       locale,
       setLocale,
+      isLocaleTransitioning,
       isRtl: isRtlLocale(locale),
       theme,
       resolvedTheme,
@@ -486,6 +530,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [
       locale,
       setLocale,
+      isLocaleTransitioning,
       theme,
       resolvedTheme,
       setTheme,

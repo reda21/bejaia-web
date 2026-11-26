@@ -30,6 +30,8 @@ import {
 } from '@/components/history/ImmersiveArticleReader';
 import { HistoryAiQuiz } from '@/components/history/HistoryAiQuiz';
 import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
+import { ArticleSaveActions } from '@/components/history/ArticleSaveActions';
+import { HistorySavedBar } from '@/components/history/HistorySavedBar';
 import { InteractiveHistoryTimeline } from '@/components/history/InteractiveHistoryTimeline';
 import { getDestinationBySlug } from '@/data/destinations';
 import {
@@ -39,7 +41,7 @@ import {
   MEDINA_STRATA,
   NATURALIST_DOSSIERS,
 } from '@/data/history';
-import type { SourceCitation } from '@/types';
+import type { OfflineHistoryArticlePayload, SourceCitation } from '@/types';
 
 type HistoryTab = 'timeline' | 'figures' | 'medina' | 'glossary' | 'nature' | 'quiz';
 
@@ -124,9 +126,11 @@ export function HistoryEncyclopediaClient() {
   const [glossaryCategory, setGlossaryCategory] = useState<string>('all');
   const [glossarySearch, setGlossarySearch] = useState('');
   const [immersiveSession, setImmersiveSession] = useState<{
-    collection: 'eras' | 'figures' | 'medina' | 'nature';
+    collection: 'eras' | 'figures' | 'medina' | 'nature' | 'offline';
     index: number;
   } | null>(null);
+  const [offlineReaderArticle, setOfflineReaderArticle] =
+    useState<ImmersiveArticleItem | null>(null);
 
   const proseSizeClass = getProseSizeClass(readerPrefs.fontScale);
 
@@ -134,6 +138,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       HISTORICAL_ERAS.map((era) => ({
         id: era.id,
+        kind: 'era',
         order: era.order,
         kicker: `${era.order} · ${lt(era.dateRange)}`,
         title: lt(era.title),
@@ -154,6 +159,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       HISTORICAL_FIGURES.map((fig, idx) => ({
         id: fig.id,
+        kind: 'figure',
         order: `0${idx + 1}`,
         kicker: `0${idx + 1} · ${lt(fig.dates)}`,
         title: lt(fig.name),
@@ -170,6 +176,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       MEDINA_STRATA.map((layer) => ({
         id: layer.id,
+        kind: 'medina',
         order: layer.order,
         kicker: `${layer.order} · ${lt(layer.period)}`,
         title: lt(layer.title),
@@ -184,6 +191,7 @@ export function HistoryEncyclopediaClient() {
     () =>
       NATURALIST_DOSSIERS.map((dossier, idx) => ({
         id: dossier.id,
+        kind: 'nature',
         order: `0${idx + 1}`,
         kicker: `0${idx + 1} · ${lt(dossier.ecosystemType)}`,
         title: lt(dossier.title),
@@ -200,11 +208,56 @@ export function HistoryEncyclopediaClient() {
 
   const activeImmersiveList = useMemo(() => {
     if (!immersiveSession) return [];
+    if (immersiveSession.collection === 'offline') {
+      return offlineReaderArticle ? [offlineReaderArticle] : [];
+    }
     if (immersiveSession.collection === 'eras') return eraArticles;
     if (immersiveSession.collection === 'figures') return figureArticles;
     if (immersiveSession.collection === 'medina') return medinaArticles;
     return natureArticles;
-  }, [eraArticles, figureArticles, immersiveSession, medinaArticles, natureArticles]);
+  }, [
+    eraArticles,
+    figureArticles,
+    immersiveSession,
+    medinaArticles,
+    natureArticles,
+    offlineReaderArticle,
+  ]);
+
+  const handleNavigateToBookmark = (
+    targetTab: 'timeline' | 'figures' | 'medina' | 'nature',
+    anchorSlug: string
+  ) => {
+    setActiveTab(targetTab);
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const el = document.getElementById(anchorSlug);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 60);
+    });
+  };
+
+  const handleOpenOfflineArticle = (payload: OfflineHistoryArticlePayload) => {
+    setOfflineReaderArticle({
+      id: payload.id,
+      kind: payload.kind,
+      order: payload.order,
+      kicker: `${payload.order ? `${payload.order} · ` : ''}${lt(payload.kicker)}`,
+      title: lt(payload.title),
+      subtitle: payload.subtitle ? lt(payload.subtitle) : undefined,
+      summary: lt(payload.summary),
+      paragraphs: payload.paragraphs.map((p) => lt(p)),
+      pullQuote: payload.pullQuote ? lt(payload.pullQuote) : undefined,
+      keyPointsTitle: t('culture.keyElements'),
+      keyPoints: payload.keyPoints?.map((kp) => lt(kp)),
+      coverImage: payload.coverImage,
+      relatedDestinationSlugs: payload.relatedDestinations,
+      sources: payload.sources,
+    });
+    setImmersiveSession({ collection: 'offline', index: 0 });
+  };
 
   const filteredGlossary = useMemo(() => {
     const q = glossarySearch.trim().toLowerCase();
@@ -285,7 +338,14 @@ export function HistoryEncyclopediaClient() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-10">
+        {!readerPrefs.readerMode && (
+          <HistorySavedBar
+            onNavigateToSection={handleNavigateToBookmark}
+            onOpenOfflineArticle={handleOpenOfflineArticle}
+          />
+        )}
+
         {/* TAB 1: CHRONOLOGICAL TIMELINE ACROSS THE CENTURIES */}
         {activeTab === 'timeline' && (
           <div className="space-y-16">
@@ -364,6 +424,11 @@ export function HistoryEncyclopediaClient() {
                             {era.order} · {lt(era.dateRange)}
                           </p>
                           <div className="flex flex-wrap items-center gap-2">
+                            <ArticleSaveActions
+                              articleId={era.id}
+                              kind="era"
+                              coverImageSrc={era.coverImage.src}
+                            />
                             <ArticleAudioPlayer
                               articleId={era.id}
                               title={lt(era.title)}
@@ -500,6 +565,7 @@ export function HistoryEncyclopediaClient() {
                         <span>{lt(fig.dates)}</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
+                        <ArticleSaveActions articleId={fig.id} kind="figure" />
                         <ArticleAudioPlayer
                           articleId={fig.id}
                           title={lt(fig.name)}
@@ -577,7 +643,8 @@ export function HistoryEncyclopediaClient() {
             {MEDINA_STRATA.map((layer, layerIdx) => (
               <article
                 key={layer.id}
-                className="bg-white border border-[#103B50]/12 rounded-lg p-6 sm:p-8 space-y-4"
+                id={layer.id}
+                className="scroll-mt-24 bg-white border border-[#103B50]/12 rounded-lg p-6 sm:p-8 space-y-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2 tabular-nums">
@@ -591,6 +658,7 @@ export function HistoryEncyclopediaClient() {
                         ? 'Vestiges attestés sur site'
                         : 'Traces archéologiques ponctuelles'}
                     </span>
+                    <ArticleSaveActions articleId={layer.id} kind="medina" />
                     <ArticleAudioPlayer
                       articleId={layer.id}
                       title={lt(layer.title)}
@@ -762,6 +830,11 @@ export function HistoryEncyclopediaClient() {
                         0{idx + 1} · {lt(dossier.ecosystemType)}
                       </p>
                       <div className="flex flex-wrap items-center gap-2">
+                        <ArticleSaveActions
+                          articleId={dossier.id}
+                          kind="nature"
+                          coverImageSrc={dossier.coverImage.src}
+                        />
                         <ArticleAudioPlayer
                           articleId={dossier.id}
                           title={lt(dossier.title)}

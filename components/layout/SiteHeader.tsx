@@ -28,7 +28,7 @@ import type { Locale, ThemePreference } from '@/types';
 
 const LOCALES: { code: Locale; label: string; title: string }[] = [
   { code: 'fr', label: 'FR', title: 'Français' },
-  { code: 'ar', label: 'العربية', title: 'العربية (RTL)' },
+  { code: 'ar', label: 'AR', title: 'العربية (RTL)' },
   { code: 'kab', label: 'KAB', title: 'Taqvaylit / Tamazight' },
 ];
 
@@ -161,27 +161,24 @@ export function SiteHeader() {
               <PWAInstallButton compact />
             </div>
 
-            <div
-              role="group"
-              aria-label="Sélecteur de langue"
-              className="flex items-center bg-[#F4EFE5] p-0.5 rounded-md"
-            >
-              {LOCALES.map((loc) => (
+            {(() => {
+              const currentIndex = LOCALES.findIndex((loc) => loc.code === locale);
+              const safeIndex = currentIndex === -1 ? 0 : currentIndex;
+              const currentLoc = LOCALES[safeIndex];
+              const nextLoc = LOCALES[(safeIndex + 1) % LOCALES.length];
+              return (
                 <button
-                  key={loc.code}
                   type="button"
-                  title={loc.title}
-                  onClick={() => setLocale(loc.code)}
-                  className={`px-2 py-1 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 ${
-                    locale === loc.code
-                      ? 'bg-[#103B50] text-white'
-                      : 'text-[#103B50]/75 hover:text-[#103B50]'
-                  }`}
+                  onClick={() => setLocale(nextLoc.code)}
+                  lang={currentLoc.code}
+                  title={`Langue active : ${currentLoc.title} — Cliquer pour passer à : ${nextLoc.title}`}
+                  aria-label={`Langue active : ${currentLoc.title} — Prochaine langue : ${nextLoc.title}`}
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[#103B50]/15 bg-[#FAF8F3] hover:bg-[#103B50] hover:text-white hover:border-[#103B50] text-[#103B50] dark:border-[#E6F0F5]/20 dark:bg-[#132633] dark:text-[#EDF3F7] dark:hover:bg-[#3AB8D6] dark:hover:text-[#0B1720] dark:hover:border-[#3AB8D6] text-[11px] font-bold tracking-tight uppercase transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087E9B] dark:focus-visible:ring-[#3AB8D6]"
                 >
-                  {loc.label}
+                  {currentLoc.label}
                 </button>
-              ))}
-            </div>
+              );
+            })()}
 
             <button
               type="button"

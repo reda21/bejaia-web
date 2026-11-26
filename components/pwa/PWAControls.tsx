@@ -257,7 +257,7 @@ export function OfflinePackButton({ compact = false }: { compact?: boolean }) {
 
       // Direct Cache Storage fallback if SW controller is still initializing
       if (typeof caches !== 'undefined') {
-        const cache = await caches.open('bejaia-pages-v4');
+        const cache = await caches.open('bejaia-pages-v5');
         const routes = [
           '/destinations',
           '/carte',

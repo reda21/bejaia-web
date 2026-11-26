@@ -1,8 +1,9 @@
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const PAGES_CACHE = `bejaia-pages-${CACHE_VERSION}`;
 const ASSETS_CACHE = `bejaia-assets-${CACHE_VERSION}`;
 const TILES_CACHE = `bejaia-tiles-${CACHE_VERSION}`;
-const VALID_CACHES = [PAGES_CACHE, ASSETS_CACHE, TILES_CACHE];
+const HISTORY_ARTICLES_CACHE = `bejaia-history-${CACHE_VERSION}`;
+const VALID_CACHES = [PAGES_CACHE, ASSETS_CACHE, TILES_CACHE, HISTORY_ARTICLES_CACHE];
 
 const CORE_SHELL = [
   '/',
@@ -99,6 +100,96 @@ async function cacheAllTravelPages(notifyClients) {
   }
 }
 
+async function getCachedHistoryArticleIds() {
+  const cache = await caches.open(HISTORY_ARTICLES_CACHE);
+  const requests = await cache.keys();
+  const ids = [];
+  for (const req of requests) {
+    try {
+      const u = new URL(req.url);
+      if (u.pathname === '/api/history-articles') {
+        const id = u.searchParams.get('id');
+        if (id) ids.push(id);
+      }
+    } catch {
+      // Ignore malformed URLs
+    }
+  }
+  return Array.from(new Set(ids));
+}
+
+async function broadcastHistoryOfflineStatus(extra = {}) {
+  const cachedIds = await getCachedHistoryArticleIds();
+  const clients = await self.clients.matchAll({ includeUncontrolled: true });
+  clients.forEach((client) => {
+    client.postMessage({
+      type: 'HISTORY_OFFLINE_STATUS',
+      cachedIds,
+      ...extra,
+    });
+  });
+}
+
+async function cacheUrlIntoBucket(cacheName, targetUrl) {
+  if (!targetUrl || typeof targetUrl !== 'string') return false;
+  try {
+    const res = await fetch(targetUrl, { credentials: 'same-origin' });
+    if (res.ok) {
+      const cache = await caches.open(cacheName);
+      await cache.put(targetUrl, res.clone());
+      return true;
+    }
+  } catch {
+    // Ignore transient fetch errors
+  }
+  return false;
+}
+
+async function cacheHistoryArticle(articleId, extraUrls = []) {
+  if (!articleId) return;
+  const articleApiUrl = `/api/history-articles?id=${encodeURIComponent(articleId)}`;
+  await cacheUrlIntoBucket(HISTORY_ARTICLES_CACHE, articleApiUrl);
+  await cacheUrlIntoBucket(PAGES_CACHE, '/histoire');
+
+  for (const rawUrl of extraUrls) {
+    if (typeof rawUrl !== 'string' || !rawUrl.startsWith('/')) continue;
+    const bucket = rawUrl.startsWith('/api/history-articles')
+      ? HISTORY_ARTICLES_CACHE
+      : rawUrl.startsWith('/histoire')
+        ? PAGES_CACHE
+        : ASSETS_CACHE;
+    await cacheUrlIntoBucket(bucket, rawUrl);
+  }
+
+  await broadcastHistoryOfflineStatus({ lastCachedId: articleId });
+}
+
+async function removeHistoryArticle(articleId) {
+  if (!articleId) return;
+  const cache = await caches.open(HISTORY_ARTICLES_CACHE);
+  const target = new URL(`/api/history-articles?id=${encodeURIComponent(articleId)}`, self.location.origin).href;
+  await cache.delete(target);
+  await broadcastHistoryOfflineStatus({ lastRemovedId: articleId });
+}
+
+async function cacheAllHistoryArticles(articleIds = [], extraUrls = []) {
+  await cacheUrlIntoBucket(PAGES_CACHE, '/histoire');
+  await cacheUrlIntoBucket(HISTORY_ARTICLES_CACHE, '/api/history-articles');
+
+  for (const rawUrl of extraUrls) {
+    if (typeof rawUrl !== 'string' || !rawUrl.startsWith('/')) continue;
+    const bucket = rawUrl.startsWith('/histoire') ? PAGES_CACHE : ASSETS_CACHE;
+    await cacheUrlIntoBucket(bucket, rawUrl);
+  }
+
+  for (const articleId of articleIds) {
+    const articleApiUrl = `/api/history-articles?id=${encodeURIComponent(articleId)}`;
+    await cacheUrlIntoBucket(HISTORY_ARTICLES_CACHE, articleApiUrl);
+  }
+
+  await broadcastHistoryOfflineStatus({ allDone: true });
+}
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -115,8 +206,19 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'CACHE_ALL_TRAVEL_PAGES') {
+  const data = event.data;
+  if (!data || !data.type) return;
+
+  if (data.type === 'CACHE_ALL_TRAVEL_PAGES') {
     event.waitUntil(cacheAllTravelPages(true));
+  } else if (data.type === 'CACHE_HISTORY_ARTICLE') {
+    event.waitUntil(cacheHistoryArticle(data.articleId, data.urls || []));
+  } else if (data.type === 'REMOVE_HISTORY_ARTICLE') {
+    event.waitUntil(removeHistoryArticle(data.articleId));
+  } else if (data.type === 'CACHE_ALL_HISTORY_ARTICLES') {
+    event.waitUntil(cacheAllHistoryArticles(data.articleIds || [], data.urls || []));
+  } else if (data.type === 'GET_CACHED_HISTORY_ARTICLES') {
+    event.waitUntil(broadcastHistoryOfflineStatus());
   }
 });
 
@@ -150,6 +252,24 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (url.origin !== self.location.origin) return;
+
+  // Serve cached historical article payloads offline (network-first with Cache Storage fallback)
+  if (url.pathname === '/api/history-articles') {
+    event.respondWith(
+      caches.open(HISTORY_ARTICLES_CACHE).then((cache) =>
+        fetch(request)
+          .then((response) => {
+            if (response.ok) {
+              cache.put(request, response.clone()).catch(() => undefined);
+            }
+            return response;
+          })
+          .catch(() => cache.match(request))
+      )
+    );
+    return;
+  }
+
   if (url.pathname.startsWith('/api/')) return;
 
   const isRscRequest =

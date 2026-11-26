@@ -3,6 +3,7 @@ import { Playfair_Display, Plus_Jakarta_Sans, Noto_Sans_Arabic } from 'next/font
 import { AppProviders } from '@/components/providers/AppProviders';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { DynamicBreadcrumbs } from '@/components/layout/DynamicBreadcrumbs';
+import { LocaleFadeMain } from '@/components/layout/LocaleFadeMain';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import './globals.css';
 
@@ -132,7 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppProviders>
           <SiteHeader />
           <DynamicBreadcrumbs />
-          <main className="flex-1">{children}</main>
+          <LocaleFadeMain>{children}</LocaleFadeMain>
           <SiteFooter />
         </AppProviders>
       </body>

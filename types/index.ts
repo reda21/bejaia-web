@@ -365,6 +365,33 @@ export interface HistoryQuizResponse {
   questions: HistoryQuizQuestion[];
 }
 
+export type HistorySectionKind = 'era' | 'figure' | 'medina' | 'nature';
+
+export interface HistoryBookmarkEntry {
+  id: string;
+  kind: HistorySectionKind;
+  savedAt: string;
+}
+
+export interface OfflineHistoryArticlePayload {
+  id: string;
+  slug: string;
+  kind: HistorySectionKind;
+  order?: string;
+  kicker: LocalizedText;
+  title: LocalizedText;
+  subtitle?: LocalizedText;
+  summary: LocalizedText;
+  paragraphs: LocalizedText[];
+  pullQuote?: LocalizedText;
+  keyPoints?: LocalizedText[];
+  coverImage?: MediaAsset;
+  relatedDestinations: string[];
+  sources?: SourceCitation[];
+  cachedVersion: string;
+}
+
+
 
 
 
