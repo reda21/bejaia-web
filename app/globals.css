@@ -249,8 +249,8 @@ html.dark .site-header-nav-right-icons .nav-action-button.nav-action-lang:hover 
 }
 
 .site-header-nav-right-icons .nav-action-button svg {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 1.125rem;
+  height: 1.125rem;
   stroke: var(--accent-med);
   stroke-width: 2;
   transition: stroke 150ms cubic-bezier(0.16, 1, 0.3, 1);

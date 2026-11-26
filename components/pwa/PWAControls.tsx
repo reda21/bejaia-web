@@ -128,7 +128,7 @@ export function PWAInstallButton({
   if (deferredPrompt) {
     if (headerMinimal) {
       return (
-        <div className="relative inline-flex items-center">
+        <div className="relative hidden md:inline-flex items-center">
           <button
             type="button"
             onClick={handleInstall}
@@ -136,7 +136,7 @@ export function PWAInstallButton({
             aria-describedby="tooltip-nav-pwa"
             className="peer nav-action-button"
           >
-            <Download className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+            <Download className="w-[18px] h-[18px] shrink-0" strokeWidth={2} />
           </button>
           <NavActionTooltip id="tooltip-nav-pwa" label={t('pwa.installApp')} />
         </div>
@@ -162,7 +162,7 @@ export function PWAInstallButton({
   if (isIOS) {
     return (
       <>
-        <div className={headerMinimal ? 'relative inline-flex items-center' : 'inline-flex'}>
+        <div className={headerMinimal ? 'relative hidden md:inline-flex items-center' : 'inline-flex'}>
           <button
             type="button"
             onClick={() => setShowIOSGuide(true)}
@@ -175,7 +175,7 @@ export function PWAInstallButton({
                 : 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#103B50]/20 bg-[#FAF8F3] text-xs font-medium text-[#103B50] hover:bg-[#F4EFE5] transition-colors whitespace-nowrap shrink-0'
             }
           >
-            <Smartphone className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+            <Smartphone className={headerMinimal ? 'w-[18px] h-[18px] shrink-0' : 'w-3.5 h-3.5 shrink-0'} strokeWidth={2} />
             {!headerMinimal && <span>{t('pwa.installIOS')}</span>}
           </button>
           {headerMinimal && (

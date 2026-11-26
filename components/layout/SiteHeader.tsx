@@ -302,7 +302,7 @@ export function SiteHeader() {
           </nav>
 
           {/* Zone 3: Harmonized Right-Side Action Icons & Conditional Terracotta Badges */}
-          <div className="site-header-nav-right-icons flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="site-header-nav-right-icons flex items-center gap-2 shrink-0">
             <div className="relative inline-flex items-center">
               <button
                 type="button"
@@ -312,7 +312,7 @@ export function SiteHeader() {
                 aria-expanded={searchOpen}
                 className="peer nav-action-button"
               >
-                <Search className="w-3.5 h-3.5" strokeWidth={2} />
+                <Search className="w-[18px] h-[18px]" strokeWidth={2} />
               </button>
               <NavActionTooltip
                 id="tooltip-nav-search"
@@ -321,9 +321,7 @@ export function SiteHeader() {
               />
             </div>
 
-            <div className="hidden md:inline-flex items-center">
-              <PWAInstallButton headerMinimal />
-            </div>
+            <PWAInstallButton headerMinimal />
 
             <div className="relative inline-flex items-center">
               <button
@@ -354,8 +352,8 @@ export function SiteHeader() {
                 aria-pressed={resolvedTheme === 'dark'}
                 className="peer nav-action-button"
               >
-                <Moon className="w-3.5 h-3.5 dark:hidden" strokeWidth={2} />
-                <Sun className="w-3.5 h-3.5 hidden dark:block" strokeWidth={2} />
+                <Moon className="w-[18px] h-[18px] dark:hidden" strokeWidth={2} />
+                <Sun className="w-[18px] h-[18px] hidden dark:block" strokeWidth={2} />
               </button>
               <NavActionTooltip
                 id="tooltip-nav-theme"
@@ -377,14 +375,10 @@ export function SiteHeader() {
                 }
                 aria-describedby="tooltip-nav-itinerary"
                 aria-expanded={itineraryOpen}
-                className="peer nav-action-button !w-auto px-2 gap-1.5"
+                className="peer nav-action-button"
               >
-                <span
-                  className={`relative inline-flex items-center justify-center shrink-0 ${
-                    itineraryCount > 0 ? 'lg:me-1' : ''
-                  }`}
-                >
-                  <Route className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                <span className="relative inline-flex items-center justify-center">
+                  <Route className="w-[18px] h-[18px]" strokeWidth={2} />
                   {itineraryCount > 0 && (
                     <span
                       aria-hidden="true"
@@ -393,9 +387,6 @@ export function SiteHeader() {
                       {formatBadgeCount(itineraryCount)}
                     </span>
                   )}
-                </span>
-                <span className="hidden lg:inline text-xs font-medium text-[#103B50]">
-                  {t('itinerary.buttonLabel')}
                 </span>
               </button>
               <NavActionTooltip
@@ -423,7 +414,7 @@ export function SiteHeader() {
                 className="peer nav-action-button"
               >
                 <span className="relative inline-flex items-center justify-center">
-                  <Heart className="w-3.5 h-3.5" strokeWidth={2} />
+                  <Heart className="w-[18px] h-[18px]" strokeWidth={2} />
                   {favoritesCount > 0 && (
                     <span
                       aria-hidden="true"
@@ -456,9 +447,9 @@ export function SiteHeader() {
                 className="peer nav-action-button"
               >
                 {mobileMenuOpen ? (
-                  <X className="w-3.5 h-3.5" strokeWidth={2} />
+                  <X className="w-[18px] h-[18px]" strokeWidth={2} />
                 ) : (
-                  <Menu className="w-3.5 h-3.5" strokeWidth={2} />
+                  <Menu className="w-[18px] h-[18px]" strokeWidth={2} />
                 )}
               </button>
               <NavActionTooltip id="tooltip-nav-menu" label={t('nav.menu')} />
