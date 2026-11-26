@@ -281,9 +281,18 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
             target.isContentEditable)
       );
 
+      const emitNavShortcut = (action: 'search' | 'lang' | 'theme' | 'itinerary' | 'favorites' | 'menu', shortcut: string) => {
+        window.dispatchEvent(
+          new CustomEvent('bejaia-nav-shortcut', {
+            detail: { action, shortcut },
+          })
+        );
+      };
+
       if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
+        emitNavShortcut('search', 'Ctrl+K');
         return;
       }
 
@@ -301,10 +310,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
           if (singleKey === 'f') {
             e.preventDefault();
             setFavoritesOpen((prev) => !prev);
+            emitNavShortcut('favorites', 'F');
             return;
           } else if (singleKey === 's') {
             e.preventDefault();
             setSearchOpen((prev) => !prev);
+            emitNavShortcut('search', 'S');
             return;
           } else if (singleKey === 'm') {
             e.preventDefault();
@@ -313,6 +324,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
           } else if (singleKey === 'i') {
             e.preventDefault();
             setItineraryOpen((prev) => !prev);
+            emitNavShortcut('itinerary', 'I');
             return;
           }
         }
@@ -324,17 +336,28 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       if (key === 'i') {
         e.preventDefault();
         setItineraryOpen((prev) => !prev);
+        emitNavShortcut('itinerary', 'Alt+I');
       } else if (key === 'f') {
         e.preventDefault();
         setFavoritesOpen((prev) => !prev);
+        emitNavShortcut('favorites', 'Alt+F');
       } else if (key === 't') {
         e.preventDefault();
         toggleTheme();
+        emitNavShortcut('theme', 'Alt+T');
       } else if (key === 'l') {
         e.preventDefault();
         const idx = LOCALE_ORDER.indexOf(locale);
         const nextLocale = LOCALE_ORDER[(idx === -1 ? 0 : idx + 1) % LOCALE_ORDER.length];
         setLocale(nextLocale);
+        emitNavShortcut('lang', 'Alt+L');
+      } else if (key === 's') {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+        emitNavShortcut('search', 'Alt+S');
+      } else if (key === 'm') {
+        e.preventDefault();
+        emitNavShortcut('menu', 'Alt+M');
       }
     };
 

@@ -266,6 +266,19 @@ html.dark .site-header-nav-right-icons .nav-action-button[aria-expanded="true"] 
   stroke: #FFFFFF;
 }
 
+.site-header-nav-right-icons .nav-action-button[data-shortcut-active="true"] {
+  outline: 2px solid var(--accent-med);
+  outline-offset: 2px;
+}
+
+.site-header-nav-right-icons .nav-action-button[data-shortcut-active="true"] svg {
+  stroke: var(--ink-heading);
+}
+
+html.dark .site-header-nav-right-icons .nav-action-button[data-shortcut-active="true"] svg {
+  stroke: #FFFFFF;
+}
+
 /* Print-ready A4 Field Dossier Styling */
 @media print {
   header,

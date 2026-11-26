@@ -22,7 +22,19 @@
     "cycleLanguageHint": "تغيير اللغة",
     "announcementLanguage": "اللغة النشطة:",
     "announcementThemeLight": "تم تفعيل الوضع الفاتح",
-    "announcementThemeDark": "تم تفعيل الوضع الداكن"
+    "announcementThemeDark": "تم تفعيل الوضع الداكن",
+    "tooltipSearch": "ابحث عن موقع سياحي أو شاطئ أو مقال تاريخي",
+    "tooltipInstall": "تثبيت تطبيق اكتشف بجاية للقراءة دون اتصال",
+    "tooltipThemeToDark": "تفعيل الوضع الداكن للقراءة الليلية المريحة",
+    "tooltipThemeToLight": "العودة إلى الوضع الفاتح",
+    "tooltipItinerary": "فتح وتنظيم مسار رحلتك المخصص",
+    "tooltipFavorites": "عرض المفضلة والأماكن المُزارة وملاحظاتك",
+    "tooltipMenu": "فتح أو إغلاق قائمة التنقل",
+    "tooltipShare": "نسخ رابط هذه الصفحة إلى الحافظة",
+    "shareLabel": "مشاركة الصفحة",
+    "shareCopiedLabel": "تم نسخ الرابط",
+    "shareCopiedToast": "تم نسخ رابط الصفحة إلى الحافظة",
+    "shortcutActivated": "تم تفعيل الاختصار"
   },
   "hero": {
     "kicker": "ولاية بجاية · الجزائر · البحر الأبيض المتوسط",

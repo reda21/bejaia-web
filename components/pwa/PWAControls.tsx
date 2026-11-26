@@ -138,7 +138,11 @@ export function PWAInstallButton({
           >
             <Download className="w-[18px] h-[18px] shrink-0" strokeWidth={2} />
           </button>
-          <NavActionTooltip id="tooltip-nav-pwa" label={t('pwa.installApp')} />
+          <NavActionTooltip
+            id="tooltip-nav-pwa"
+            label={t('pwa.installApp')}
+            description={t('nav.tooltipInstall')}
+          />
         </div>
       );
     }
@@ -179,7 +183,11 @@ export function PWAInstallButton({
             {!headerMinimal && <span>{t('pwa.installIOS')}</span>}
           </button>
           {headerMinimal && (
-            <NavActionTooltip id="tooltip-nav-pwa-ios" label={t('pwa.installIOS')} />
+            <NavActionTooltip
+              id="tooltip-nav-pwa-ios"
+              label={t('pwa.installIOS')}
+              description={t('nav.tooltipInstall')}
+            />
           )}
         </div>
 

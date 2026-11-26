@@ -22,7 +22,19 @@
     "cycleLanguageHint": "Changer de langue",
     "announcementLanguage": "Langue active :",
     "announcementThemeLight": "Mode clair activé",
-    "announcementThemeDark": "Mode sombre activé"
+    "announcementThemeDark": "Mode sombre activé",
+    "tooltipSearch": "Rechercher un site, une plage ou un article",
+    "tooltipInstall": "Installer Béjaïa Explorer pour un accès hors ligne",
+    "tooltipThemeToDark": "Activer le mode sombre pour la lecture nocturne",
+    "tooltipThemeToLight": "Revenir au mode clair",
+    "tooltipItinerary": "Ouvrir et organiser mon itinéraire personnalisé",
+    "tooltipFavorites": "Consulter mes favoris, visites et notes de terrain",
+    "tooltipMenu": "Ouvrir ou fermer le menu de navigation",
+    "tooltipShare": "Copier le lien de cette page dans le presse-papiers",
+    "shareLabel": "Partager la page",
+    "shareCopiedLabel": "Lien copié",
+    "shareCopiedToast": "Lien de la page copié dans le presse-papiers",
+    "shortcutActivated": "Raccourci activé"
   },
   "hero": {
     "kicker": "Wilaya de Béjaïa · Algérie · Méditerranée",

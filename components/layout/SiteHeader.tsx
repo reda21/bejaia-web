@@ -18,6 +18,9 @@ import {
   Sun,
   Moon,
   Monitor,
+  Keyboard,
+  Share2,
+  Check,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
 import { DESTINATIONS, getDestinationBySlug } from '@/data/destinations';
@@ -72,10 +75,26 @@ export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [liveAnnouncement, setLiveAnnouncement] = useState('');
+  const [activeShortcutAction, setActiveShortcutAction] = useState<
+    'search' | 'lang' | 'theme' | 'itinerary' | 'favorites' | 'menu' | null
+  >(null);
+  const [shortcutToast, setShortcutToast] = useState<{ shortcut: string; label: string } | null>(
+    null
+  );
+  const [copiedShare, setCopiedShare] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const searchBtnRef = useRef<HTMLButtonElement>(null);
+  const langBtnRef = useRef<HTMLButtonElement>(null);
+  const themeBtnRef = useRef<HTMLButtonElement>(null);
+  const itineraryBtnRef = useRef<HTMLButtonElement>(null);
+  const favoritesBtnRef = useRef<HTMLButtonElement>(null);
+  const shareBtnRef = useRef<HTMLButtonElement>(null);
   const mobileMenuBtnRef = useRef<HTMLButtonElement>(null);
+  const shortcutFlashTimerRef = useRef<number | null>(null);
+  const shortcutToastTimerRef = useRef<number | null>(null);
+  const shareCopiedTimerRef = useRef<number | null>(null);
   const prevLocaleRef = useRef<Locale | null>(null);
   const prevThemeRef = useRef<'light' | 'dark' | null>(null);
 
@@ -161,6 +180,84 @@ export function SiteHeader() {
     };
   }, [mobileMenuOpen]);
 
+  // Global keyboard shortcut button focus + ephemeral visual activation cue
+  useEffect(() => {
+    const onShortcut = (event: Event) => {
+      const custom = event as CustomEvent<{
+        action?: 'search' | 'lang' | 'theme' | 'itinerary' | 'favorites' | 'menu';
+        shortcut?: string;
+      }>;
+      const action = custom.detail?.action;
+      const shortcut = custom.detail?.shortcut;
+      if (!action || !shortcut) return;
+
+      const refMap = {
+        search: searchBtnRef,
+        lang: langBtnRef,
+        theme: themeBtnRef,
+        itinerary: itineraryBtnRef,
+        favorites: favoritesBtnRef,
+        menu: mobileMenuBtnRef,
+      };
+
+      const labelMap = {
+        search: t('nav.search'),
+        lang: t('nav.cycleLanguageHint'),
+        theme: resolvedTheme === 'dark' ? t('theme.light') : t('theme.dark'),
+        itinerary: t('itinerary.buttonLabel'),
+        favorites: t('nav.favorites'),
+        menu: t('nav.menu'),
+      };
+
+      if (action === 'menu') {
+        setMobileMenuOpen((prev) => !prev);
+      }
+
+      const targetBtn = refMap[action].current;
+      targetBtn?.focus({ preventScroll: true });
+
+      setActiveShortcutAction(action);
+      if (shortcutFlashTimerRef.current) window.clearTimeout(shortcutFlashTimerRef.current);
+      shortcutFlashTimerRef.current = window.setTimeout(() => {
+        setActiveShortcutAction(null);
+      }, 1100);
+
+      const label = labelMap[action];
+      setShortcutToast({ shortcut, label });
+      setLiveAnnouncement(`${t('nav.shortcutActivated')} : ${label} (${shortcut})`);
+      if (shortcutToastTimerRef.current) window.clearTimeout(shortcutToastTimerRef.current);
+      shortcutToastTimerRef.current = window.setTimeout(() => {
+        setShortcutToast(null);
+      }, 1800);
+    };
+
+    window.addEventListener('bejaia-nav-shortcut', onShortcut);
+    return () => {
+      window.removeEventListener('bejaia-nav-shortcut', onShortcut);
+      if (shortcutFlashTimerRef.current) window.clearTimeout(shortcutFlashTimerRef.current);
+      if (shortcutToastTimerRef.current) window.clearTimeout(shortcutToastTimerRef.current);
+      if (shareCopiedTimerRef.current) window.clearTimeout(shareCopiedTimerRef.current);
+    };
+  }, [resolvedTheme, t]);
+
+  // Close Favorites drawer on Escape and restore focus to the trigger button
+  useEffect(() => {
+    if (!favoritesOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setFavoritesOpen(false);
+        window.requestAnimationFrame(() => {
+          favoritesBtnRef.current?.focus({ preventScroll: true });
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [favoritesOpen, setFavoritesOpen]);
+
   const navItems = [
     { href: '/', label: t('nav.home') },
     { href: '/destinations', label: t('nav.destinations') },
@@ -230,6 +327,45 @@ export function SiteHeader() {
     });
     e.target.value = '';
     setTimeout(() => setImportFeedback(null), 4000);
+  };
+
+  const handleCopyCurrentPageUrl = async () => {
+    if (typeof window === 'undefined') return;
+    const url = window.location.href;
+    let copied = false;
+
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        copied = true;
+      } catch {
+        copied = false;
+      }
+    }
+
+    if (!copied && typeof document !== 'undefined') {
+      try {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = url;
+        tempInput.setAttribute('readonly', '');
+        tempInput.className = 'fixed -top-full opacity-0';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        copied = document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      } catch {
+        copied = false;
+      }
+    }
+
+    if (copied) {
+      setCopiedShare(true);
+      setLiveAnnouncement(t('nav.shareCopiedToast'));
+      if (shareCopiedTimerRef.current) window.clearTimeout(shareCopiedTimerRef.current);
+      shareCopiedTimerRef.current = window.setTimeout(() => {
+        setCopiedShare(false);
+      }, 2200);
+    }
   };
 
   const currentLocIndex = LOCALES.findIndex((loc) => loc.code === locale);
@@ -305,11 +441,13 @@ export function SiteHeader() {
           <div className="site-header-nav-right-icons flex items-center gap-2 shrink-0">
             <div className="relative inline-flex items-center">
               <button
+                ref={searchBtnRef}
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                aria-label={`${t('nav.search')} (Ctrl+K)`}
+                aria-label={`${t('nav.search')} — ${t('nav.tooltipSearch')} (Ctrl+K)`}
                 aria-describedby="tooltip-nav-search"
                 aria-expanded={searchOpen}
+                data-shortcut-active={activeShortcutAction === 'search' ? 'true' : undefined}
                 className="peer nav-action-button"
               >
                 <Search className="w-[18px] h-[18px]" strokeWidth={2} />
@@ -317,6 +455,7 @@ export function SiteHeader() {
               <NavActionTooltip
                 id="tooltip-nav-search"
                 label={t('nav.search')}
+                description={t('nav.tooltipSearch')}
                 shortcut="Ctrl+K"
               />
             </div>
@@ -325,31 +464,36 @@ export function SiteHeader() {
 
             <div className="relative inline-flex items-center">
               <button
+                ref={langBtnRef}
                 type="button"
                 onClick={() => setLocale(nextLoc.code)}
                 lang={currentLoc.code}
-                aria-label={`${t('nav.cycleLanguageHint')} — ${currentLoc.title} → ${nextLoc.title}`}
+                aria-label={`${t('nav.cycleLanguageHint')} — ${currentLoc.title} → ${nextLoc.title} (Alt+L)`}
                 aria-describedby="tooltip-nav-lang"
+                data-shortcut-active={activeShortcutAction === 'lang' ? 'true' : undefined}
                 className="peer nav-action-button nav-action-lang text-xs font-bold tracking-tight uppercase"
               >
                 {currentLoc.label}
               </button>
               <NavActionTooltip
                 id="tooltip-nav-lang"
-                label={`${currentLoc.title} → ${nextLoc.title}`}
+                label={t('nav.cycleLanguageHint')}
+                description={`${currentLoc.title} → ${nextLoc.title}`}
                 shortcut="Alt+L"
               />
             </div>
 
             <div className="relative inline-flex items-center">
               <button
+                ref={themeBtnRef}
                 type="button"
                 onClick={toggleTheme}
-                aria-label={
+                aria-label={`${
                   resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
-                }
+                } (Alt+T)`}
                 aria-describedby="tooltip-nav-theme"
                 aria-pressed={resolvedTheme === 'dark'}
+                data-shortcut-active={activeShortcutAction === 'theme' ? 'true' : undefined}
                 className="peer nav-action-button"
               >
                 <Moon className="w-[18px] h-[18px] dark:hidden" strokeWidth={2} />
@@ -360,21 +504,26 @@ export function SiteHeader() {
                 label={
                   resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
                 }
+                description={
+                  resolvedTheme === 'dark' ? t('nav.tooltipThemeToLight') : t('nav.tooltipThemeToDark')
+                }
                 shortcut="Alt+T"
               />
             </div>
 
             <div className="relative inline-flex items-center">
               <button
+                ref={itineraryBtnRef}
                 type="button"
                 onClick={() => setItineraryOpen(true)}
-                aria-label={
+                aria-label={`${
                   itineraryCount > 0
                     ? `${t('itinerary.buttonLabel')} (${itineraryCount})`
                     : t('itinerary.buttonLabel')
-                }
+                } — ${t('nav.tooltipItinerary')} (Alt+I)`}
                 aria-describedby="tooltip-nav-itinerary"
                 aria-expanded={itineraryOpen}
+                data-shortcut-active={activeShortcutAction === 'itinerary' ? 'true' : undefined}
                 className="peer nav-action-button"
               >
                 <span className="relative inline-flex items-center justify-center">
@@ -396,21 +545,24 @@ export function SiteHeader() {
                     ? `${t('itinerary.buttonLabel')} (${itineraryCount})`
                     : t('itinerary.buttonLabel')
                 }
+                description={t('nav.tooltipItinerary')}
                 shortcut="Alt+I"
               />
             </div>
 
             <div className="relative inline-flex items-center">
               <button
+                ref={favoritesBtnRef}
                 type="button"
                 onClick={() => setFavoritesOpen(true)}
-                aria-label={
+                aria-label={`${
                   favoritesCount > 0
                     ? `${t('nav.favorites')} (${favoritesCount})`
                     : t('nav.favorites')
-                }
+                } — ${t('nav.tooltipFavorites')} (Alt+F)`}
                 aria-describedby="tooltip-nav-favorites"
                 aria-expanded={favoritesOpen}
+                data-shortcut-active={activeShortcutAction === 'favorites' ? 'true' : undefined}
                 className="peer nav-action-button"
               >
                 <span className="relative inline-flex items-center justify-center">
@@ -432,7 +584,30 @@ export function SiteHeader() {
                     ? `${t('nav.favorites')} (${favoritesCount})`
                     : t('nav.favorites')
                 }
+                description={t('nav.tooltipFavorites')}
                 shortcut="Alt+F"
+              />
+            </div>
+
+            <div className="relative inline-flex items-center">
+              <button
+                ref={shareBtnRef}
+                type="button"
+                onClick={() => void handleCopyCurrentPageUrl()}
+                aria-label={`${copiedShare ? t('nav.shareCopiedLabel') : t('nav.shareLabel')} — ${t('nav.tooltipShare')}`}
+                aria-describedby="tooltip-nav-share"
+                className="peer nav-action-button"
+              >
+                {copiedShare ? (
+                  <Check className="w-[18px] h-[18px]" strokeWidth={2} />
+                ) : (
+                  <Share2 className="w-[18px] h-[18px]" strokeWidth={2} />
+                )}
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-share"
+                label={copiedShare ? t('nav.shareCopiedLabel') : t('nav.shareLabel')}
+                description={t('nav.tooltipShare')}
               />
             </div>
 
@@ -441,9 +616,10 @@ export function SiteHeader() {
                 ref={mobileMenuBtnRef}
                 type="button"
                 onClick={() => setMobileMenuOpen((v) => !v)}
-                aria-label={t('nav.menu')}
+                aria-label={`${t('nav.menu')} — ${t('nav.tooltipMenu')} (Alt+M)`}
                 aria-describedby="tooltip-nav-menu"
                 aria-expanded={mobileMenuOpen}
+                data-shortcut-active={activeShortcutAction === 'menu' ? 'true' : undefined}
                 className="peer nav-action-button"
               >
                 {mobileMenuOpen ? (
@@ -452,18 +628,52 @@ export function SiteHeader() {
                   <Menu className="w-[18px] h-[18px]" strokeWidth={2} />
                 )}
               </button>
-              <NavActionTooltip id="tooltip-nav-menu" label={t('nav.menu')} />
+              <NavActionTooltip
+                id="tooltip-nav-menu"
+                label={t('nav.menu')}
+                description={t('nav.tooltipMenu')}
+                shortcut="Alt+M"
+              />
             </div>
           </div>
         </div>
 
-        {/* GPU-composited hairline scroll progress indicator */}
+        {/* Ephemeral visual confirmation toast for keyboard shortcuts or copied share link */}
+        {(copiedShare || shortcutToast) && (
+          <div className="pointer-events-none fixed top-[74px] end-4 sm:end-8 z-50 flex flex-col items-end gap-2">
+            {copiedShare && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="inline-flex items-center gap-2 rounded-md border border-[#356B50]/25 bg-white/95 backdrop-blur-md px-3 py-1.5 text-xs font-medium text-[#103B50] shadow-lg transition-opacity duration-150"
+              >
+                <Check className="w-3.5 h-3.5 text-[#356B50] shrink-0" strokeWidth={2} />
+                <span>{t('nav.shareCopiedToast')}</span>
+              </div>
+            )}
+            {shortcutToast && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="inline-flex items-center gap-2 rounded-md border border-[#103B50]/15 bg-white/95 backdrop-blur-md px-3 py-1.5 text-xs font-medium text-[#103B50] shadow-lg transition-opacity duration-150"
+              >
+                <Keyboard className="w-3.5 h-3.5 text-[#087E9B] shrink-0" strokeWidth={2} />
+                <span>{shortcutToast.label}</span>
+                <kbd className="font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#F4EFE5] text-[#51636D]">
+                  {shortcutToast.shortcut}
+                </kbd>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Fine, discreet GPU-composited reading scroll progress bar along bottom edge */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] overflow-hidden"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[2px] overflow-hidden"
         >
           <div
-            className="h-full w-full bg-[#C47B55] origin-start transition-transform duration-75"
+            className="h-full w-full bg-[#087E9B]/85 origin-start transition-transform duration-75"
             style={{ transform: `scaleX(${scrollProgress})` }}
           />
         </div>
