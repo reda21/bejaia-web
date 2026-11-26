@@ -67,6 +67,7 @@ export function CultureClient() {
                       src={article.coverImage.src}
                       alt={lt(article.coverImage.alt)}
                       fill
+                      priority={idx === 0}
                       className="object-cover"
                     />
                   </div>

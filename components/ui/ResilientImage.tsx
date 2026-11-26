@@ -55,6 +55,8 @@ export function ResilientImage({
       width={fill ? undefined : width ?? 800}
       height={fill ? undefined : height ?? 600}
       priority={priority}
+      fetchPriority={priority ? 'high' : undefined}
+      referrerPolicy="no-referrer"
       sizes={sizes ?? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
       className={className}
       onError={() => setHasError(true)}

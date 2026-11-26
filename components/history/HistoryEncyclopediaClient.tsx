@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import {
   ArrowRight,
   BookOpen,
+  BookOpenText,
   ChevronDown,
   ChevronUp,
   Clock,
@@ -15,6 +16,7 @@ import {
   MapPin,
   Search,
   ShieldAlert,
+  Sparkles,
   User,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
@@ -22,6 +24,11 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ReadingProgressBar } from '@/components/ui/ReadingProgressBar';
 import { EditorialControls, getProseSizeClass } from '@/components/ui/EditorialControls';
 import { ResilientImage } from '@/components/ui/ResilientImage';
+import {
+  ImmersiveArticleReader,
+  type ImmersiveArticleItem,
+} from '@/components/history/ImmersiveArticleReader';
+import { HistoryAiQuiz } from '@/components/history/HistoryAiQuiz';
 import { getDestinationBySlug } from '@/data/destinations';
 import {
   GLOSSARY_TERMS,
@@ -32,7 +39,7 @@ import {
 } from '@/data/history';
 import type { SourceCitation } from '@/types';
 
-type HistoryTab = 'timeline' | 'figures' | 'medina' | 'glossary' | 'nature';
+type HistoryTab = 'timeline' | 'figures' | 'medina' | 'glossary' | 'nature' | 'quiz';
 
 function SourcesAccordion({
   sources,
@@ -105,7 +112,8 @@ export function HistoryEncyclopediaClient() {
     initialTabParam === 'figures' ||
     initialTabParam === 'medina' ||
     initialTabParam === 'glossary' ||
-    initialTabParam === 'nature'
+    initialTabParam === 'nature' ||
+    initialTabParam === 'quiz'
       ? initialTabParam
       : 'timeline';
 
@@ -113,8 +121,88 @@ export function HistoryEncyclopediaClient() {
   const [activeTab, setActiveTab] = useState<HistoryTab>(validInitialTab);
   const [glossaryCategory, setGlossaryCategory] = useState<string>('all');
   const [glossarySearch, setGlossarySearch] = useState('');
+  const [immersiveSession, setImmersiveSession] = useState<{
+    collection: 'eras' | 'figures' | 'medina' | 'nature';
+    index: number;
+  } | null>(null);
 
   const proseSizeClass = getProseSizeClass(readerPrefs.fontScale);
+
+  const eraArticles = useMemo<ImmersiveArticleItem[]>(
+    () =>
+      HISTORICAL_ERAS.map((era) => ({
+        id: era.id,
+        order: era.order,
+        kicker: `${era.order} · ${lt(era.dateRange)}`,
+        title: lt(era.title),
+        subtitle: lt(era.subtitle),
+        summary: lt(era.summary),
+        paragraphs: era.paragraphs.map((p) => lt(p)),
+        pullQuote: era.pullQuote ? lt(era.pullQuote) : undefined,
+        keyPointsTitle: t('culture.keyElements'),
+        keyPoints: era.keyMilestones.map((m) => lt(m)),
+        coverImage: era.coverImage,
+        relatedDestinationSlugs: era.relatedDestinations,
+        sources: era.sources,
+      })),
+    [lt, t]
+  );
+
+  const figureArticles = useMemo<ImmersiveArticleItem[]>(
+    () =>
+      HISTORICAL_FIGURES.map((fig, idx) => ({
+        id: fig.id,
+        order: `0${idx + 1}`,
+        kicker: `0${idx + 1} · ${lt(fig.dates)}`,
+        title: lt(fig.name),
+        subtitle: lt(fig.domain),
+        summary: lt(fig.bejaiaConnection),
+        paragraphs: fig.biography.map((b) => lt(b)),
+        relatedDestinationSlugs: fig.relatedDestinations,
+        sources: fig.sources,
+      })),
+    [lt]
+  );
+
+  const medinaArticles = useMemo<ImmersiveArticleItem[]>(
+    () =>
+      MEDINA_STRATA.map((layer) => ({
+        id: layer.id,
+        order: layer.order,
+        kicker: `${layer.order} · ${lt(layer.period)}`,
+        title: lt(layer.title),
+        summary: lt(layer.description),
+        paragraphs: [lt(layer.attestationNote)],
+        relatedDestinationSlugs: layer.relatedDestinations,
+      })),
+    [lt]
+  );
+
+  const natureArticles = useMemo<ImmersiveArticleItem[]>(
+    () =>
+      NATURALIST_DOSSIERS.map((dossier, idx) => ({
+        id: dossier.id,
+        order: `0${idx + 1}`,
+        kicker: `0${idx + 1} · ${lt(dossier.ecosystemType)}`,
+        title: lt(dossier.title),
+        subtitle: lt(dossier.subtitle),
+        summary: lt(dossier.summary),
+        paragraphs: dossier.sections.map((s) => `${lt(s.heading)} — ${lt(s.body)}`),
+        keyPoints: dossier.speciesOrFormations.map((sp) => lt(sp)),
+        coverImage: dossier.coverImage,
+        relatedDestinationSlugs: dossier.relatedDestinations,
+        sources: dossier.sources,
+      })),
+    [lt]
+  );
+
+  const activeImmersiveList = useMemo(() => {
+    if (!immersiveSession) return [];
+    if (immersiveSession.collection === 'eras') return eraArticles;
+    if (immersiveSession.collection === 'figures') return figureArticles;
+    if (immersiveSession.collection === 'medina') return medinaArticles;
+    return natureArticles;
+  }, [eraArticles, figureArticles, immersiveSession, medinaArticles, natureArticles]);
 
   const filteredGlossary = useMemo(() => {
     const q = glossarySearch.trim().toLowerCase();
@@ -137,6 +225,7 @@ export function HistoryEncyclopediaClient() {
     { key: 'medina', label: t('historyPage.tabMedina'), icon: <Landmark className="w-4 h-4" /> },
     { key: 'glossary', label: t('historyPage.tabGlossary'), icon: <BookOpen className="w-4 h-4" /> },
     { key: 'nature', label: t('historyPage.tabNature'), icon: <Leaf className="w-4 h-4" /> },
+    { key: 'quiz', label: t('historyPage.tabQuiz'), icon: <Sparkles className="w-4 h-4" /> },
   ];
 
   return (
@@ -234,6 +323,7 @@ export function HistoryEncyclopediaClient() {
                           src={era.coverImage.src}
                           alt={lt(era.coverImage.alt)}
                           fill
+                          priority={idx === 0}
                           className="object-cover"
                         />
                       </div>
@@ -278,9 +368,19 @@ export function HistoryEncyclopediaClient() {
                   >
                     <div className="max-w-prose space-y-6">
                       <div className="space-y-2">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-[#C47B55] tabular-nums">
-                          {era.order} · {lt(era.dateRange)}
-                        </p>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-xs font-semibold uppercase tracking-widest text-[#C47B55] tabular-nums">
+                            {era.order} · {lt(era.dateRange)}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setImmersiveSession({ collection: 'eras', index: idx })}
+                            className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                          >
+                            <BookOpenText className="w-3.5 h-3.5" />
+                            <span>{t('historyPage.immersiveBtn')}</span>
+                          </button>
+                        </div>
                         <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#103B50] leading-tight">
                           {lt(era.title)}
                         </h2>
@@ -353,6 +453,32 @@ export function HistoryEncyclopediaClient() {
                 </article>
               ))}
             </div>
+
+            {/* Interactive AI History Quiz CTA Banner */}
+            {!readerPrefs.readerMode && (
+              <div className="no-print bg-[#FAF8F3] border border-[#103B50]/12 rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                <div className="space-y-1.5 max-w-2xl">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[#C47B55] inline-flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{t('historyQuiz.kicker')}</span>
+                  </p>
+                  <h3 className="font-serif text-2xl font-semibold text-[#103B50]">
+                    {t('historyQuiz.ctaBannerTitle')}
+                  </h3>
+                  <p className="text-sm text-[#51636D] leading-relaxed">
+                    {t('historyQuiz.subtitle')}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('quiz')}
+                  className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#103B50] hover:bg-[#087E9B] text-white text-sm font-medium transition-colors"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>{t('historyQuiz.ctaBannerBtn')}</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -367,10 +493,20 @@ export function HistoryEncyclopediaClient() {
                   className="scroll-mt-24 bg-[#FAF8F3] border border-[#103B50]/12 rounded-lg p-6 sm:p-8 flex flex-col justify-between space-y-6"
                 >
                   <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-x-2 text-xs text-[#51636D] tabular-nums">
-                      <span className="font-semibold text-[#C47B55]">0{idx + 1}</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{lt(fig.dates)}</span>
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#51636D] tabular-nums">
+                      <div className="flex items-center gap-x-2">
+                        <span className="font-semibold text-[#C47B55]">0{idx + 1}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{lt(fig.dates)}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setImmersiveSession({ collection: 'figures', index: idx })}
+                        className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                      >
+                        <BookOpenText className="w-3.5 h-3.5" />
+                        <span>{t('historyPage.immersiveBtn')}</span>
+                      </button>
                     </div>
 
                     <div>
@@ -426,7 +562,7 @@ export function HistoryEncyclopediaClient() {
               Ce relevé comparatif distingue rigoureusement les vestiges monumentaux visibles sur le terrain des traces archéologiques enfouies de la ville antique de Saldae.
             </div>
 
-            {MEDINA_STRATA.map((layer) => (
+            {MEDINA_STRATA.map((layer, layerIdx) => (
               <article
                 key={layer.id}
                 className="bg-white border border-[#103B50]/12 rounded-lg p-6 sm:p-8 space-y-4"
@@ -437,11 +573,21 @@ export function HistoryEncyclopediaClient() {
                     <span aria-hidden="true">·</span>
                     <span className="font-medium text-[#087E9B]">{lt(layer.period)}</span>
                   </div>
-                  <span className="text-[#356B50] font-medium">
-                    {layer.attestationStatus === 'attested_vestiges'
-                      ? 'Vestiges attestés sur site'
-                      : 'Traces archéologiques ponctuelles'}
-                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-[#356B50] font-medium">
+                      {layer.attestationStatus === 'attested_vestiges'
+                        ? 'Vestiges attestés sur site'
+                        : 'Traces archéologiques ponctuelles'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setImmersiveSession({ collection: 'medina', index: layerIdx })}
+                      className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                    >
+                      <BookOpenText className="w-3.5 h-3.5" />
+                      <span>{t('historyPage.immersiveBtn')}</span>
+                    </button>
+                  </div>
                 </div>
 
                 <h2 className="font-serif text-2xl font-semibold text-[#103B50]">
@@ -592,9 +738,19 @@ export function HistoryEncyclopediaClient() {
 
                 <div className="lg:col-span-7 space-y-5 max-w-prose">
                   <div className="space-y-1.5">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#356B50]">
-                      0{idx + 1} · {lt(dossier.ecosystemType)}
-                    </p>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-widest text-[#356B50]">
+                        0{idx + 1} · {lt(dossier.ecosystemType)}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setImmersiveSession({ collection: 'nature', index: idx })}
+                        className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                      >
+                        <BookOpenText className="w-3.5 h-3.5" />
+                        <span>{t('historyPage.immersiveBtn')}</span>
+                      </button>
+                    </div>
                     <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#103B50]">
                       {lt(dossier.title)}
                     </h2>
@@ -651,7 +807,20 @@ export function HistoryEncyclopediaClient() {
             ))}
           </div>
         )}
+
+        {/* TAB 6: AI INTERACTIVE HISTORY QUIZ (ROMAN SALDAE & HAMMADID EN-NACIRIA) */}
+        {activeTab === 'quiz' && <HistoryAiQuiz />}
       </div>
+
+      {/* Magazine-Style Immersive Article Reader */}
+      <ImmersiveArticleReader
+        articles={activeImmersiveList}
+        activeIndex={immersiveSession ? immersiveSession.index : null}
+        onClose={() => setImmersiveSession(null)}
+        onSelectIndex={(nextIdx) =>
+          setImmersiveSession((prev) => (prev ? { ...prev, index: nextIdx } : null))
+        }
+      />
     </div>
   );
 }

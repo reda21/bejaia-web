@@ -242,8 +242,8 @@ export function HomeClient() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-            {featured.map((dest) => (
-              <DestinationCard key={dest.slug} destination={dest} />
+            {featured.map((dest, idx) => (
+              <DestinationCard key={dest.slug} destination={dest} priority={idx < 3} />
             ))}
           </div>
         </div>
@@ -330,12 +330,14 @@ export function HomeClient() {
                   onClick={() => setLightboxIdx(idx)}
                   className={`group relative overflow-hidden rounded-lg bg-[#F4EFE5] text-start ${spanClass}`}
                 >
-                  <ResilientImage
-                    src={item.src}
-                    alt={lt(item.alt)}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                  />
+                  <span className="relative block w-full h-full">
+                    <ResilientImage
+                      src={item.src}
+                      alt={lt(item.alt)}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                  </span>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A2533]/80 via-[#0A2533]/10 to-transparent opacity-85 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute bottom-0 inset-x-0 p-4 flex items-end justify-between gap-3 text-white">
                     <div>

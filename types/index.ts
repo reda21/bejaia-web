@@ -309,5 +309,63 @@ export interface ExchangeRatesPayload {
   source: string;
 }
 
+export interface PhotoPointOfInterest {
+  id: string;
+  x: number;
+  y: number;
+  label: LocalizedText;
+  description: LocalizedText;
+  category: 'landmark' | 'nature' | 'heritage' | 'viewpoint' | 'craft';
+}
+
+export type TravelMode = 'car' | 'bus' | 'walking';
+
+export interface RouteModeEstimate {
+  mode: TravelMode;
+  distanceMeters: number;
+  distanceText: string;
+  durationSeconds: number;
+  durationText: string;
+  averageSpeedKmh: number;
+  recommended: boolean;
+  note: LocalizedText;
+}
+
+export interface RouteEstimateResponse {
+  origin: {
+    lat: number;
+    lng: number;
+    label: LocalizedText;
+  };
+  destination: {
+    lat: number;
+    lng: number;
+  };
+  source: 'osrm_live' | 'estimated_relief';
+  modes: Record<TravelMode, RouteModeEstimate>;
+}
+
+export type HistoryQuizTopic = 'both' | 'romaine' | 'hammadite';
+export type HistoryQuizDifficulty = 'decouverte' | 'intermediaire' | 'expert';
+
+export interface HistoryQuizQuestion {
+  id: string;
+  period: 'romaine' | 'hammadite';
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  historicalAnchor: string;
+}
+
+export interface HistoryQuizResponse {
+  topic: HistoryQuizTopic;
+  difficulty: HistoryQuizDifficulty;
+  generatedAt: string;
+  questions: HistoryQuizQuestion[];
+}
+
+
+
 
 

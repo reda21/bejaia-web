@@ -252,8 +252,8 @@ export function DestinationsDirectoryClient() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-              {displayed.map((dest) => (
-                <DestinationCard key={dest.slug} destination={dest} />
+              {displayed.map((dest, idx) => (
+                <DestinationCard key={dest.slug} destination={dest} priority={idx < 3} />
               ))}
             </div>
 

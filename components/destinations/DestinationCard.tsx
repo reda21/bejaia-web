@@ -8,7 +8,13 @@ import { useApp } from '@/components/providers/AppProviders';
 import { CATEGORY_MAP } from '@/data/categories';
 import type { Destination } from '@/types';
 
-export function DestinationCard({ destination }: { destination: Destination }) {
+export function DestinationCard({
+  destination,
+  priority = false,
+}: {
+  destination: Destination;
+  priority?: boolean;
+}) {
   const {
     t,
     lt,
@@ -26,11 +32,15 @@ export function DestinationCard({ destination }: { destination: Destination }) {
   return (
     <article className="group flex flex-col bg-white border border-[#103B50]/10 rounded-lg overflow-hidden transition-shadow duration-200 hover:shadow-md">
       <div className="relative aspect-[4/3] overflow-hidden bg-[#F4EFE5]">
-        <Link href={`/destinations/${destination.slug}`} className="block w-full h-full">
+        <Link
+          href={`/destinations/${destination.slug}`}
+          className="relative block w-full h-full"
+        >
           <ResilientImage
             src={destination.coverImage.src}
             alt={lt(destination.coverImage.alt)}
             fill
+            priority={priority}
             fallbackTitle={lt(destination.name)}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />

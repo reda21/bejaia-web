@@ -199,6 +199,13 @@ html.dark textarea {
   color: var(--ink-heading);
 }
 
+/* Immersive Magazine Reading Mode: hide global site navigation chrome */
+html.immersive-reading header,
+html.immersive-reading footer,
+html.immersive-reading nav[aria-label="Fil d'Ariane"] {
+  display: none !important;
+}
+
 /* Print-ready A4 Field Dossier Styling */
 @media print {
   header,

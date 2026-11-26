@@ -210,6 +210,7 @@ export function CircuitsClient() {
                         src={circuit.coverImage.src}
                         alt={lt(circuit.coverImage.alt)}
                         fill
+                        priority={index < 2}
                         className="object-cover"
                       />
                     </div>

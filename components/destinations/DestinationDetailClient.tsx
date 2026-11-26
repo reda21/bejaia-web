@@ -34,6 +34,9 @@ import { ChapterToc, type TocItem } from '@/components/ui/ChapterToc';
 import { DestinationCard } from '@/components/destinations/DestinationCard';
 import { SpeechGuidePlayer } from '@/components/destinations/SpeechGuidePlayer';
 import { DestinationQrCard } from '@/components/destinations/DestinationQrCard';
+import { DestinationShareButton } from '@/components/destinations/DestinationShareButton';
+import { DestinationImageViewer } from '@/components/destinations/DestinationImageViewer';
+import { DestinationRouteCalculator } from '@/components/destinations/DestinationRouteCalculator';
 import { BejaiaMapLibreMap } from '@/components/map/BejaiaMapLibreMap';
 import { OsmPlacesPanel } from '@/components/map/OsmPlacesPanel';
 import type { Destination, ResolvedMapLocation } from '@/types';
@@ -103,15 +106,21 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
     if (destination.historyAndHeritage) {
       list.push({ id: 'sec-history', label: t('detail.history'), index: '03' });
     }
+    const baseIdx = destination.historyAndHeritage ? 4 : 3;
     list.push({
       id: 'sec-gallery',
       label: t('detail.gallery'),
-      index: destination.historyAndHeritage ? '04' : '03',
+      index: `0${baseIdx}`,
+    });
+    list.push({
+      id: 'sec-route-calculator',
+      label: t('routeCalculator.title'),
+      index: `0${baseIdx + 1}`,
     });
     list.push({
       id: 'sec-location',
       label: t('detail.location'),
-      index: destination.historyAndHeritage ? '05' : '04',
+      index: `0${baseIdx + 2}`,
     });
     return list;
   }, [destination.historyAndHeritage, t]);
@@ -227,6 +236,13 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
                   </span>
                 </button>
 
+                <DestinationShareButton
+                  slug={destination.slug}
+                  title={lt(destination.name)}
+                  commune={lt(destination.commune)}
+                  summary={lt(destination.shortDescription)}
+                />
+
                 <a
                   href={osmUrl}
                   target="_blank"
@@ -266,13 +282,16 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
                 onClick={() => setLightboxIdx(0)}
                 className="group relative block w-full aspect-[4/3] rounded-lg overflow-hidden bg-[#F4EFE5] border border-[#103B50]/10 text-start"
               >
-                <ResilientImage
-                  src={destination.coverImage.src}
-                  alt={lt(destination.coverImage.alt)}
-                  fill
-                  priority
-                  className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                />
+                <span className="relative block w-full h-full">
+                  <ResilientImage
+                    src={destination.coverImage.src}
+                    alt={lt(destination.coverImage.alt)}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 42vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                  />
+                </span>
                 <span className="no-print absolute bottom-3 end-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#103B50]/85 text-white text-xs rounded-md">
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>{allImages.length}</span>
@@ -373,46 +392,30 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
               </section>
             )}
 
-            {/* Gallery */}
+            {/* High-Resolution Image Viewer with Zoom & Contextual Photo POIs */}
             {!readerPrefs.readerMode && (
               <section
                 id="sec-gallery"
-                className="scroll-mt-24 space-y-4 pt-8 border-t border-[#103B50]/10"
+                className="scroll-mt-24 pt-8 border-t border-[#103B50]/10"
               >
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#103B50]">
-                    {t('detail.gallery')}
-                  </h2>
-                  <button
-                    type="button"
-                    onClick={() => setLightboxIdx(0)}
-                    className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F3] hover:bg-[#F4EFE5] border border-[#103B50]/15 rounded-md text-xs font-medium text-[#103B50] transition-colors"
-                  >
-                    <Maximize2 className="w-3.5 h-3.5 text-[#087E9B]" />
-                    <span>{t('galleryUi.openFullscreen')}</span>
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {allImages.map((img, idx) => (
-                    <figure key={`${img.src}-${idx}`} className="space-y-2">
-                      <button
-                        type="button"
-                        onClick={() => setLightboxIdx(idx)}
-                        className="group relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-[#F4EFE5] border border-[#103B50]/10 text-start block"
-                      >
-                        <ResilientImage
-                          src={img.src}
-                          alt={lt(img.alt)}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                        />
-                      </button>
-                      <figcaption className="text-xs font-serif italic text-[#51636D]">
-                        Fig. {idx + 1} — {img.caption ? lt(img.caption) : lt(img.alt)}
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
+                <DestinationImageViewer
+                  destination={destination}
+                  images={allImages}
+                  onOpenFullscreen={(idx) => setLightboxIdx(idx)}
+                />
+              </section>
+            )}
+
+            {/* Route Calculator from Downtown Béjaïa (Car, Bus, Walking) */}
+            {!readerPrefs.readerMode && (
+              <section
+                id="sec-route-calculator"
+                className="no-print scroll-mt-24 pt-8 border-t border-[#103B50]/10"
+              >
+                <DestinationRouteCalculator
+                  destination={destination}
+                  resolvedLocation={resolvedLoc}
+                />
               </section>
             )}
 
@@ -672,6 +675,7 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
         activeIndex={lightboxIdx}
         onClose={() => setLightboxIdx(null)}
         onChangeIndex={setLightboxIdx}
+        destination={destination}
       />
     </article>
   );

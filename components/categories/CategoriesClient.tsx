@@ -44,6 +44,7 @@ export function CategoriesIndexClient() {
                     src={cat.coverImage.src}
                     alt={lt(cat.coverImage.alt)}
                     fill
+                    priority={idx < 2}
                     className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>
@@ -126,6 +127,7 @@ export function CategoryDetailClient({ category }: { category: CategoryDefinitio
                   alt={lt(category.coverImage.alt)}
                   fill
                   priority
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover"
                 />
               </div>
