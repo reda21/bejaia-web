@@ -37,6 +37,17 @@
     "readingModeLabel": "وضع القراءة",
     "exitReadingMode": "إنهاء وضع القراءة",
     "tooltipReadingMode": "إخفاء شريط التنقل والتذييل لقراءة مريحة",
+    "contrastLabel": "تباين عالٍ",
+    "exitContrastLabel": "تباين قياسي",
+    "tooltipContrast": "تعزيز تباين النصوص والحدود لتحسين وضوح القراءة",
+    "contrastEnabledToast": "تم تفعيل وضع التباين العالي",
+    "contrastDisabledToast": "تمت استعادة التباين القياسي",
+    "fullscreenLabel": "ملء الشاشة",
+    "exitFullscreenLabel": "إنهاء ملء الشاشة",
+    "tooltipFullscreen": "تبديل عرض المتصفح إلى وضع ملء الشاشة",
+    "fullscreenEnteredToast": "تم تفعيل وضع ملء الشاشة",
+    "fullscreenExitedToast": "تم إنهاء وضع ملء الشاشة",
+    "fullscreenUnsupportedToast": "وضع ملء الشاشة غير متاح في هذا السياق",
     "shortcutActivated": "تم تفعيل الاختصار"
   },
   "hero": {

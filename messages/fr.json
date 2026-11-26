@@ -37,6 +37,17 @@
     "readingModeLabel": "Mode Lecture",
     "exitReadingMode": "Quitter le mode lecture",
     "tooltipReadingMode": "Masquer la navigation pour une lecture immersive",
+    "contrastLabel": "Contraste élevé",
+    "exitContrastLabel": "Contraste standard",
+    "tooltipContrast": "Renforcer les contrastes et bordures pour la lisibilité",
+    "contrastEnabledToast": "Mode contraste élevé activé",
+    "contrastDisabledToast": "Contraste standard rétabli",
+    "fullscreenLabel": "Plein écran",
+    "exitFullscreenLabel": "Quitter le plein écran",
+    "tooltipFullscreen": "Basculer le navigateur en mode plein écran",
+    "fullscreenEnteredToast": "Mode plein écran activé",
+    "fullscreenExitedToast": "Mode plein écran quitté",
+    "fullscreenUnsupportedToast": "Le plein écran n'est pas autorisé dans ce contexte",
     "shortcutActivated": "Raccourci activé"
   },
   "hero": {

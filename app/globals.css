@@ -52,6 +52,36 @@ html.theme-view-transitioning *::after {
   --border-strong: rgba(230, 240, 245, 0.24);
 }
 
+:root.high-contrast {
+  --surface-page: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-soft: #F7F4EC;
+  --surface-sand: #EAE2D0;
+  --ink-primary: #000000;
+  --ink-heading: #041E2B;
+  --ink-muted: #1E333E;
+  --accent-med: #005B75;
+  --accent-forest: #1E4A34;
+  --accent-terracotta: #9E4E28;
+  --border-subtle: rgba(4, 30, 43, 0.55);
+  --border-strong: rgba(4, 30, 43, 0.85);
+}
+
+:root.high-contrast.dark {
+  --surface-page: #000000;
+  --surface-card: #081219;
+  --surface-soft: #0C1A24;
+  --surface-sand: #122634;
+  --ink-primary: #FFFFFF;
+  --ink-heading: #FFFFFF;
+  --ink-muted: #DCE7EE;
+  --accent-med: #5CE1FF;
+  --accent-forest: #7FE3AE;
+  --accent-terracotta: #FFB088;
+  --border-subtle: rgba(255, 255, 255, 0.48);
+  --border-strong: rgba(255, 255, 255, 0.82);
+}
+
 @theme inline {
   --color-med-blue: var(--accent-med);
   --color-deep-blue: var(--ink-heading);
@@ -194,6 +224,63 @@ html.dark select,
 html.dark input,
 html.dark textarea {
   color-scheme: dark;
+}
+
+/* High-Contrast Accessibility Mode (Light & Dark) */
+html.high-contrast .text-\[\#103B50\],
+html.high-contrast .text-\[\#102530\] {
+  color: var(--ink-heading) !important;
+}
+
+html.high-contrast .text-\[\#103B50\]\/85,
+html.high-contrast .text-\[\#103B50\]\/80,
+html.high-contrast .text-\[\#103B50\]\/75,
+html.high-contrast .text-\[\#102530\]\/90,
+html.high-contrast .text-\[\#102530\]\/85 {
+  color: var(--ink-primary) !important;
+}
+
+html.high-contrast .text-\[\#51636D\] {
+  color: var(--ink-muted) !important;
+}
+
+html.high-contrast .text-\[\#087E9B\] {
+  color: var(--accent-med) !important;
+}
+
+html.high-contrast .text-\[\#356B50\] {
+  color: var(--accent-forest) !important;
+}
+
+html.high-contrast .text-\[\#C47B55\] {
+  color: var(--accent-terracotta) !important;
+}
+
+html.high-contrast .border-\[\#103B50\]\/10,
+html.high-contrast .border-\[\#103B50\]\/12,
+html.high-contrast .border-\[\#103B50\]\/15 {
+  border-color: var(--border-subtle) !important;
+}
+
+html.high-contrast .border-\[\#103B50\]\/20 {
+  border-color: var(--border-strong) !important;
+}
+
+html.high-contrast.dark .bg-white\/95 {
+  background-color: rgba(8, 18, 25, 0.98) !important;
+}
+
+html.high-contrast.dark .bg-white\/90 {
+  background-color: rgba(8, 18, 25, 0.96) !important;
+}
+
+html.high-contrast a:focus-visible,
+html.high-contrast button:focus-visible,
+html.high-contrast input:focus-visible,
+html.high-contrast select:focus-visible,
+html.high-contrast textarea:focus-visible {
+  outline: 3px solid var(--accent-med);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

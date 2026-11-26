@@ -22,6 +22,9 @@ import {
   Share2,
   Check,
   BookOpen,
+  Contrast,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
 import { DESTINATIONS, getDestinationBySlug } from '@/data/destinations';
@@ -84,6 +87,9 @@ export function SiteHeader() {
   );
   const [copiedShare, setCopiedShare] = useState(false);
   const [immersiveReading, setImmersiveReading] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenToast, setFullscreenToast] = useState<{ ok: boolean; msg: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -94,10 +100,13 @@ export function SiteHeader() {
   const favoritesBtnRef = useRef<HTMLButtonElement>(null);
   const shareBtnRef = useRef<HTMLButtonElement>(null);
   const readingBtnRef = useRef<HTMLButtonElement>(null);
+  const contrastBtnRef = useRef<HTMLButtonElement>(null);
+  const fullscreenBtnRef = useRef<HTMLButtonElement>(null);
   const mobileMenuBtnRef = useRef<HTMLButtonElement>(null);
   const shortcutFlashTimerRef = useRef<number | null>(null);
   const shortcutToastTimerRef = useRef<number | null>(null);
   const shareCopiedTimerRef = useRef<number | null>(null);
+  const fullscreenToastTimerRef = useRef<number | null>(null);
   const prevLocaleRef = useRef<Locale | null>(null);
   const prevThemeRef = useRef<'light' | 'dark' | null>(null);
 
@@ -283,6 +292,53 @@ export function SiteHeader() {
     };
   }, [immersiveReading]);
 
+  // Hydrate high-contrast accessibility preference & sync html.high-contrast class
+  useEffect(() => {
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      try {
+        if (window.localStorage.getItem('bejaia_explorer_high_contrast') === 'true') {
+          setHighContrast(true);
+        }
+      } catch {
+        // Ignore storage restrictions
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('high-contrast', highContrast);
+  }, [highContrast]);
+
+  // Sync browser Fullscreen API state and clean up toast timers
+  useEffect(() => {
+    let active = true;
+    const getFullscreenElement = () => {
+      const doc = document as Document & { webkitFullscreenElement?: Element | null };
+      return document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+    };
+
+    const syncFullscreen = () => {
+      if (!active) return;
+      setIsFullscreen(Boolean(getFullscreenElement()));
+    };
+
+    queueMicrotask(syncFullscreen);
+    document.addEventListener('fullscreenchange', syncFullscreen);
+    document.addEventListener('webkitfullscreenchange', syncFullscreen);
+
+    return () => {
+      active = false;
+      document.removeEventListener('fullscreenchange', syncFullscreen);
+      document.removeEventListener('webkitfullscreenchange', syncFullscreen);
+      if (fullscreenToastTimerRef.current) window.clearTimeout(fullscreenToastTimerRef.current);
+    };
+  }, []);
+
   const navItems = [
     { href: '/', label: t('nav.home') },
     { href: '/destinations', label: t('nav.destinations') },
@@ -390,6 +446,65 @@ export function SiteHeader() {
       shareCopiedTimerRef.current = window.setTimeout(() => {
         setCopiedShare(false);
       }, 2200);
+    }
+  };
+
+  const handleToggleContrast = () => {
+    const next = !highContrast;
+    setHighContrast(next);
+    try {
+      window.localStorage.setItem('bejaia_explorer_high_contrast', String(next));
+    } catch {
+      // Ignore storage restrictions
+    }
+    setLiveAnnouncement(next ? t('nav.contrastEnabledToast') : t('nav.contrastDisabledToast'));
+  };
+
+  const showFullscreenFeedback = (ok: boolean, msg: string) => {
+    setFullscreenToast({ ok, msg });
+    setLiveAnnouncement(msg);
+    if (fullscreenToastTimerRef.current) window.clearTimeout(fullscreenToastTimerRef.current);
+    fullscreenToastTimerRef.current = window.setTimeout(() => {
+      setFullscreenToast(null);
+    }, 2400);
+  };
+
+  const handleToggleFullscreen = async () => {
+    if (typeof document === 'undefined') return;
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void> | void;
+    };
+    const root = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void> | void;
+    };
+
+    const currentFs = document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+
+    try {
+      if (currentFs) {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (doc.webkitExitFullscreen) {
+          await doc.webkitExitFullscreen();
+        } else {
+          throw new Error('Fullscreen exit unsupported');
+        }
+        setIsFullscreen(false);
+        showFullscreenFeedback(true, t('nav.fullscreenExitedToast'));
+      } else {
+        if (root.requestFullscreen) {
+          await root.requestFullscreen();
+        } else if (root.webkitRequestFullscreen) {
+          await root.webkitRequestFullscreen();
+        } else {
+          throw new Error('Fullscreen request unsupported');
+        }
+        setIsFullscreen(true);
+        showFullscreenFeedback(true, t('nav.fullscreenEnteredToast'));
+      }
+    } catch {
+      showFullscreenFeedback(false, t('nav.fullscreenUnsupportedToast'));
     }
   };
 
@@ -657,6 +772,52 @@ export function SiteHeader() {
               />
             </div>
 
+            <div className="relative inline-flex items-center">
+              <button
+                ref={contrastBtnRef}
+                type="button"
+                onClick={handleToggleContrast}
+                aria-label={`${
+                  highContrast ? t('nav.exitContrastLabel') : t('nav.contrastLabel')
+                } — ${t('nav.tooltipContrast')}`}
+                aria-describedby="tooltip-nav-contrast"
+                aria-pressed={highContrast}
+                className="peer nav-action-button"
+              >
+                <Contrast className="w-[18px] h-[18px]" strokeWidth={2} />
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-contrast"
+                label={highContrast ? t('nav.exitContrastLabel') : t('nav.contrastLabel')}
+                description={t('nav.tooltipContrast')}
+              />
+            </div>
+
+            <div className="relative inline-flex items-center">
+              <button
+                ref={fullscreenBtnRef}
+                type="button"
+                onClick={() => void handleToggleFullscreen()}
+                aria-label={`${
+                  isFullscreen ? t('nav.exitFullscreenLabel') : t('nav.fullscreenLabel')
+                } — ${t('nav.tooltipFullscreen')}`}
+                aria-describedby="tooltip-nav-fullscreen"
+                aria-pressed={isFullscreen}
+                className="peer nav-action-button"
+              >
+                {isFullscreen ? (
+                  <Minimize2 className="w-[18px] h-[18px]" strokeWidth={2} />
+                ) : (
+                  <Maximize2 className="w-[18px] h-[18px]" strokeWidth={2} />
+                )}
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-fullscreen"
+                label={isFullscreen ? t('nav.exitFullscreenLabel') : t('nav.fullscreenLabel')}
+                description={t('nav.tooltipFullscreen')}
+              />
+            </div>
+
             <div className="relative inline-flex items-center xl:hidden">
               <button
                 ref={mobileMenuBtnRef}
@@ -684,8 +845,8 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* Ephemeral visual confirmation toast for keyboard shortcuts or copied share link */}
-        {(copiedShare || shortcutToast) && (
+        {/* Ephemeral visual confirmation toast for keyboard shortcuts, copied share link, or fullscreen */}
+        {(copiedShare || shortcutToast || fullscreenToast) && (
           <div className="pointer-events-none fixed top-[74px] end-4 sm:end-8 z-50 flex flex-col items-end gap-2">
             {copiedShare && (
               <div
@@ -695,6 +856,32 @@ export function SiteHeader() {
               >
                 <Check className="w-3.5 h-3.5 text-[#356B50] shrink-0" strokeWidth={2} />
                 <span>{t('nav.shareCopiedToast')}</span>
+              </div>
+            )}
+            {fullscreenToast && (
+              <div
+                role="status"
+                aria-live="polite"
+                className={`inline-flex items-center gap-2 rounded-md border bg-white/95 backdrop-blur-md px-3 py-1.5 text-xs font-medium text-[#103B50] shadow-lg transition-opacity duration-150 ${
+                  fullscreenToast.ok ? 'border-[#356B50]/25' : 'border-[#C47B55]/35'
+                }`}
+              >
+                {isFullscreen ? (
+                  <Maximize2
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      fullscreenToast.ok ? 'text-[#356B50]' : 'text-[#C47B55]'
+                    }`}
+                    strokeWidth={2}
+                  />
+                ) : (
+                  <Minimize2
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      fullscreenToast.ok ? 'text-[#087E9B]' : 'text-[#C47B55]'
+                    }`}
+                    strokeWidth={2}
+                  />
+                )}
+                <span>{fullscreenToast.msg}</span>
               </div>
             )}
             {shortcutToast && (
