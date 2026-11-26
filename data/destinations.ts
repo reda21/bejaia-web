@@ -31,15 +31,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'parc-national-gouraya',
     slug: 'parc-national-gouraya',
-    name: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Massif de Gouraya · Littoral centre', ar: 'جبل قوراية · الساحل الأوسط' },
+    name: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية', kab: 'Amraḥ aɣelnaw n Guraya' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Massif de Gouraya · Littoral centre', ar: 'جبل قوراية · الساحل الأوسط', kab: 'Adrar n Guraya · Aftis alemmas' },
     category: 'naturel',
     secondaryCategories: ['montagne', 'aventure'],
     featured: true,
     shortDescription: {
       fr: 'Réserve de biosphère UNESCO mêlant falaises plongeant dans la Méditerranée, forêts littorales et patrimoine historique.',
       ar: 'محمية للمحيط الحيوي مصنفة من اليونسكو تجمع بين المنحدرات البحرية والغابات الساحلية والتراث التاريخي.',
+      kab: 'Aḥraz n tudert n UNESCO i yesdukklen ifriwen i d-yeɣlin deg Yilel Agrakal, tiẓegwa n uftis d tgemmi tamezruyant.',
     },
     overview: {
       fr: 'Situé au nord-est de la ville de Béjaïa, le Parc national de Gouraya protège un écosystème littoral et montagnard exceptionnel classé réserve de biosphère par l’UNESCO. Il englobe des sites emblématiques tels que le Mont Gouraya, le Cap Carbon, le Pic des Singes et la Baie des Aiguades.',
@@ -89,15 +90,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'cap-carbon',
     slug: 'cap-carbon',
-    name: { fr: 'Cap Carbon', ar: 'رأس كربون' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية' },
+    name: { fr: 'Cap Carbon', ar: 'رأس كربون', kab: 'Ixef Karbun (Cap Carbon)' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية', kab: 'Amraḥ aɣelnaw n Guraya' },
     category: 'naturel',
     secondaryCategories: ['montagne', 'aventure'],
     featured: true,
     shortDescription: {
       fr: 'Promontoire rocheux vertigineux célèbre pour son phare perché au-dessus des flots et son arche marine naturelle.',
       ar: 'نتوء صخري شاهق يشتهر بمنارته المطلة على الأمواج وقوسه البحري الطبيعي.',
+      kab: 'Ixf n uẓru aɛlayan yettwassnen s teftilt-is ɣef yilel d uqenṭar-is agaman n yidɣaɣen.',
     },
     overview: {
       fr: 'Site emblématique de la Wilaya de Béjaïa au sein du Parc national de Gouraya, le Cap Carbon s’avance audacieusement dans la mer Méditerranée. Sa falaise calcaire abrite un phare maritime historique dominant le large.',
@@ -146,15 +148,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'mont-gouraya',
     slug: 'mont-gouraya',
-    name: { fr: 'Mont Gouraya (Yemma Gouraya)', ar: 'جبل قوراية (يما قوراية)' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية' },
+    name: { fr: 'Mont Gouraya (Yemma Gouraya)', ar: 'جبل قوراية (يما قوراية)', kab: 'Adrar n Guraya (Yemma Guraya)' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية', kab: 'Amraḥ aɣelnaw n Guraya' },
     category: 'montagne',
     secondaryCategories: ['historique', 'naturel'],
     featured: true,
     shortDescription: {
       fr: 'Sommet tutélaire dominant la ville de Béjaïa, couronné par son fort historique et des vues spectaculaires sur le golfe.',
       ar: 'القمة الشامخة المشرفة على مدينة بجاية والمتوّجة بحصنها التاريخي وبإطلالات بانورامية على الخليج.',
+      kab: 'Taqacuct taɛlayant i d-yettmuqulen ɣer temdint n Bgayet, s lberǧ-is amezruyan d tmuɣliwin ɣef usagen.',
     },
     overview: {
       fr: 'Véritable silhouette protectrice de la ville, le Mont Gouraya s’élève directement au-dessus du port et de la médina de Béjaïa. Son sommet offre l’un des plus beaux belvédères de la rive sud de la Méditerranée.',
@@ -199,15 +202,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'pic-des-singes',
     slug: 'pic-des-singes',
-    name: { fr: 'Pic des Singes', ar: 'قمة القردة' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية' },
+    name: { fr: 'Pic des Singes', ar: 'قمة القردة', kab: 'Taqacuct n Yibkan' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية', kab: 'Amraḥ aɣelnaw n Guraya' },
     category: 'naturel',
     secondaryCategories: ['montagne', 'aventure'],
     featured: true,
     shortDescription: {
       fr: 'Belvédère naturel spectaculaire au-dessus de la mer, célèbre pour sa colonie de macaques de Barbarie en liberté.',
       ar: 'مطل طبيعي خلاب فوق البحر، يشتهر بوجود قردة المكاك البربري في بيئتها الطبيعية.',
+      kab: 'Tamazirt tagamant ɣef yilel, tettwassen s yibkan n Tmazɣa i yettidiren deg tlelli.',
     },
     overview: {
       fr: 'Situé sur la route côtière du Parc national de Gouraya en direction du Cap Carbon, le Pic des Singes est l’un des sites les plus prisés de Béjaïa pour son panorama vertigineux et sa faune sauvage.',
@@ -247,14 +251,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'baie-des-aiguades',
     slug: 'baie-des-aiguades',
-    name: { fr: 'Baie des Aiguades', ar: 'خليج ليغواد' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية' },
+    name: { fr: 'Baie des Aiguades', ar: 'خليج ليغواد', kab: 'Aɣezraw n Ligwad' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Parc national de Gouraya', ar: 'الحظيرة الوطنية لقوراية', kab: 'Amraḥ aɣelnaw n Guraya' },
     category: 'naturel',
     secondaryCategories: ['balneaire'],
     shortDescription: {
       fr: 'Anse abritée aux eaux limpides blottie au pied des falaises verdoyantes du massif de Gouraya.',
       ar: 'خليج هادئ بمياه صافية يحتضنه سفح المنحدرات الخضراء لجبل قوراية.',
+      kab: 'Aɣezraw iɛezlen s waman ṣṣafin seddaw yifriwen izegzawen n udrar n Guraya.',
     },
     overview: {
       fr: 'Nichée sur le flanc ouest du Parc national de Gouraya, la Baie des Aiguades offre un cadre naturel préservé où la forêt descend jusqu’aux galets et aux eaux transparentes.',
@@ -290,15 +295,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'foret-akfadou',
     slug: 'foret-akfadou',
-    name: { fr: 'Forêt d’Akfadou', ar: 'غابة أكفادو' },
-    commune: { fr: 'Adekar / Akfadou', ar: 'أدكار / أكفادو' },
-    region: { fr: 'Massif de l’Akfadou · Kabylie', ar: 'مرتفعات أكفادو · القبائل' },
+    name: { fr: 'Forêt d’Akfadou', ar: 'غابة أكفادو', kab: 'Tiẓegi n Akfadu' },
+    commune: { fr: 'Adekar / Akfadou', ar: 'أدكار / أكفادو', kab: 'Adekar / Akfadu' },
+    region: { fr: 'Massif de l’Akfadou · Kabylie', ar: 'مرتفعات أكفادو · القبائل', kab: 'Adrar n Akfadu · Tamurt n Leqbayel' },
     category: 'naturel',
     secondaryCategories: ['montagne', 'aventure'],
     featured: true,
     shortDescription: {
       fr: 'Vaste massif forestier d’altitude réputé pour ses chênes zéens et afarès, ses lacs temporaires et son air pur.',
       ar: 'كتلة غابية جبلية شاسعة تشتهر بأشجار البلوط العريقة وبحيراتها الموسمية وهوائها النقي.',
+      kab: 'Tiẓegi tameqqrant n udrar yettwassnen s yisekla n ubelluḍ d uzan, igelmimen-is d uzwu-is aṣfi.',
     },
     overview: {
       fr: 'À cheval entre les wilayas de Béjaïa et de Tizi Ouzou, la forêt de l’Akfadou est l’un des plus grands ensembles forestiers caducifoliés d’Algérie. Elle abrite une flore riche et une faune montagnarde préservée.',
@@ -336,14 +342,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'gorges-kherrata-chabet-el-akra',
     slug: 'gorges-kherrata-chabet-el-akra',
-    name: { fr: 'Gorges de Kherrata et Chabet El Akra', ar: 'مضيق خراطة وشعبة الآخرة' },
-    commune: { fr: 'Kherrata', ar: 'خراطة' },
-    region: { fr: 'Sud-Est de la Wilaya · Babors', ar: 'جنوب شرق الولاية · جبال البابور' },
+    name: { fr: 'Gorges de Kherrata et Chabet El Akra', ar: 'مضيق خراطة وشعبة الآخرة', kab: 'Iɣzer n Xerraṭa d Caɛbet Laxra' },
+    commune: { fr: 'Kherrata', ar: 'خراطة', kab: 'Xerraṭa' },
+    region: { fr: 'Sud-Est de la Wilaya · Babors', ar: 'جنوب شرق الولاية · جبال البابور', kab: 'Anẓul-Usamar n twilayt · Babur' },
     category: 'montagne',
     secondaryCategories: ['grottes', 'aventure'],
     shortDescription: {
       fr: 'Défilé rocheux vertigineux taillé dans les parois calcaires des Babors, étape mythique reliant Béjaïa aux Hauts-Plateaux.',
       ar: 'مضيق صخري مهيب محفور وسط الجدران الكلسية لجبال البابور، يربط بجاية بالهضاب العليا.',
+      kab: 'Abrid aɛlayan yettwanɣen deg yidɣaɣen n Babur, yettaqqnen Bgayet ɣer Yizaɣaren Iɛlayen.',
     },
     overview: {
       fr: 'Creusées par l’oued Agrioun au cœur des montagnes des Babors, les gorges de Kherrata (Chabet El Akra) offrent un spectacle géologique impressionnant fait de parois verticales, de tunnels et d’ouvrages d’art spectaculaires.',
@@ -385,15 +392,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'grottes-aokas',
     slug: 'grottes-aokas',
-    name: { fr: 'Grottes féeriques d’Aokas', ar: 'المغارات العجيبة بأوقاس' },
-    commune: { fr: 'Aokas', ar: 'أوقاس' },
-    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية' },
+    name: { fr: 'Grottes féeriques d’Aokas', ar: 'المغارات العجيبة بأوقاس', kab: 'Ifran n Aweqqas' },
+    commune: { fr: 'Aokas', ar: 'أوقاس', kab: 'Aweqqas' },
+    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية', kab: 'Aftis usamar n Bgayet' },
     category: 'grottes',
     secondaryCategories: ['naturel'],
     featured: true,
     shortDescription: {
       fr: 'Cavité karstique remarquable ornée de stalactites et stalagmites sculptées par le temps au bord du littoral d’Aokas.',
       ar: 'مغارة كلسية مدهشة تزينها الصواعد والنوازل التي نحتها الزمن على مقربة من ساحل أوقاس.',
+      kab: 'Ifran igamanen icebḥen s yisekkilen n yidɣaɣen i d-yexdem wakud ɣef yidis n uftis n Aweqqas.',
     },
     overview: {
       fr: 'Creusées dans le massif calcaire dominant la côte Est, les grottes féeriques d’Aokas figurent parmi les curiosités géologiques les plus célèbres de la Wilaya de Béjaïa.',
@@ -434,14 +442,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'paysages-cotiers-aokas',
     slug: 'paysages-cotiers-aokas',
-    name: { fr: 'Paysages côtiers et Cap d’Aokas', ar: 'المناظر الساحلية ورأس أوقاس' },
-    commune: { fr: 'Aokas', ar: 'أوقاس' },
-    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية' },
+    name: { fr: 'Paysages côtiers et Cap d’Aokas', ar: 'المناظر الساحلية ورأس أوقاس', kab: 'Imeẓriyen n uftis d Yixef n Aweqqas' },
+    commune: { fr: 'Aokas', ar: 'أوقاس', kab: 'Aweqqas' },
+    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية', kab: 'Aftis usamar n Bgayet' },
     category: 'grottes',
     secondaryCategories: ['balneaire', 'naturel'],
     shortDescription: {
       fr: 'Corniches spectaculaires où les falaises rocheuses et les versants boisés plongent dans les eaux claires du golfe.',
       ar: 'كورنيشات خلابة تلتقي فيها المنحدرات الصخرية والغابات مباشرة بمياه الخليج الصافية.',
+      kab: 'Iberdan n uftis anda idɣaɣen d tẓegwa ttemlilin d waman ṣṣafin n yilel.',
     },
     overview: {
       fr: 'Entre Tichy et Souk El Tenine, le littoral d’Aokas conjugue plages ouvertes, promontoires calcaires et points de vue remarquables sur le golfe de Béjaïa.',
@@ -476,14 +485,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'tichy',
     slug: 'tichy',
-    name: { fr: 'Plages de Tichy', ar: 'شواطئ تيشي' },
-    commune: { fr: 'Tichy', ar: 'تيشي' },
-    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية' },
+    name: { fr: 'Plages de Tichy', ar: 'شواطئ تيشي', kab: 'Tiftisin n Tici' },
+    commune: { fr: 'Tichy', ar: 'تيشي', kab: 'Tici' },
+    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية', kab: 'Aftis usamar n Bgayet' },
     category: 'balneaire',
     featured: true,
     shortDescription: {
       fr: 'Station balnéaire majeure de la côte Est, appréciée pour ses longues plages de sable fin et son ambiance conviviale.',
       ar: 'محطة سياحية شاطئية رئيسية على الساحل الشرقي، معروفة بشواطئها الرملية الواسعة وأجوائها العائلية.',
+      kab: 'Tamnaḍt tameqqrant n uftis usamar, tettwassen s tiftisin-is n rrmel aleqqaq d umager igerrzen.',
     },
     overview: {
       fr: 'Située à l’est de Béjaïa, Tichy est l’une des stations balnéaires les plus connues de la Wilaya. Elle dispose d’un vaste front de mer adossé aux reliefs verdoyants de la côte.',
@@ -519,13 +529,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'plage-aokas',
     slug: 'plage-aokas',
-    name: { fr: 'Plages d’Aokas', ar: 'شواطئ أوقاس' },
-    commune: { fr: 'Aokas', ar: 'أوقاس' },
-    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية' },
+    name: { fr: 'Plages d’Aokas', ar: 'شواطئ أوقاس', kab: 'Tiftisin n Aweqqas' },
+    commune: { fr: 'Aokas', ar: 'أوقاس', kab: 'Aweqqas' },
+    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية', kab: 'Aftis usamar n Bgayet' },
     category: 'balneaire',
     shortDescription: {
       fr: 'Station balnéaire côtière entourée de montagnes boisées, réputée pour son sable fin et sa proximité avec les grottes.',
       ar: 'محطة شاطئية محاطة بالجبال الخضراء، تشتهر برمالها الناعمة وقربها من المغارات العجيبة.',
+      kab: 'Taftist i d-yezzin s yidurar d tẓegwa, tettwassen s rrmel-is aleqqaq d teqreb-is ɣer yifran.',
     },
     overview: {
       fr: 'Commune littorale emblématique de la côte Est de Béjaïa, Aokas combine plaisirs balnéaires, patrimoine géologique et paysages montagneux immédiatement visibles depuis le rivage.',
@@ -555,14 +566,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'boulimat',
     slug: 'boulimat',
-    name: { fr: 'Plage de Boulimat', ar: 'شاطئ بوليمات' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Côte Ouest de Béjaïa', ar: 'الساحل الغربي لبجاية' },
+    name: { fr: 'Plage de Boulimat', ar: 'شاطئ بوليمات', kab: 'Taftist n Bulimaṭ' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Côte Ouest de Béjaïa', ar: 'الساحل الغربي لبجاية', kab: 'Aftis umalu n Bgayet' },
     category: 'balneaire',
     featured: true,
     shortDescription: {
       fr: 'Grande plage naturelle de la côte Ouest bordée de pinèdes et dominée par les collines verdoyantes.',
       ar: 'شاطئ طبيعي واسع على الساحل الغربي تحفه غابات الصنوبر والتلال الخضراء.',
+      kab: 'Taftist tagamant tameqqrant n uftis umalu, zzin-as-d tẓegwa n tayda d yidurar izegzawen.',
     },
     overview: {
       fr: 'À l’ouest du chef-lieu de Béjaïa, Boulimat est réputée pour son environnement naturel remarquable où collines boisées, îlots rocheux et eaux limpides composent un tableau méditerranéen préservé.',
@@ -592,13 +604,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'saket',
     slug: 'saket',
-    name: { fr: 'Plage de Saket', ar: 'شاطئ ساكت' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Côte Ouest de Béjaïa', ar: 'الساحل الغربي لبجاية' },
+    name: { fr: 'Plage de Saket', ar: 'شاطئ ساكت', kab: 'Taftist n Saket' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Côte Ouest de Béjaïa', ar: 'الساحل الغربي لبجاية', kab: 'Aftis umalu n Bgayet' },
     category: 'balneaire',
     shortDescription: {
       fr: 'Anse tranquille et lumineuse de la côte Ouest, entourée de reliefs boisés descendant vers la mer.',
       ar: 'خليج هادئ ومشرق على الساحل الغربي تحيط به المرتفعات الخضراء المنحدرة نحو البحر.',
+      kab: 'Aɣezraw iɛezlen u yecbeḥ deg uftis umalu, zzin-as-d yidurar i d-yeɣlin ɣer yilel.',
     },
     overview: {
       fr: 'Prolongeant la côte Ouest après Boulimat, Saket séduit par sa baie dégagée, ses eaux claires et son atmosphère paisible face à la Méditerranée.',
@@ -628,13 +641,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'souk-el-tenine',
     slug: 'souk-el-tenine',
-    name: { fr: 'Souk El Tenine', ar: 'سوق الإثنين' },
-    commune: { fr: 'Souk El Tenine', ar: 'سوق الإثنين' },
-    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية' },
+    name: { fr: 'Souk El Tenine', ar: 'سوق الإثنين', kab: 'Suq Letnin' },
+    commune: { fr: 'Souk El Tenine', ar: 'سوق الإثنين', kab: 'Suq Letnin' },
+    region: { fr: 'Côte Est de Béjaïa', ar: 'الساحل الشرقي لبجاية', kab: 'Aftis usamar n Bgayet' },
     category: 'balneaire',
     shortDescription: {
       fr: 'Commune littorale connue pour ses grandes plages de sable doré et sa situation carrefour entre mer et montagne.',
       ar: 'بلدية ساحلية معروفة بشواطئها الرملية الواسعة وموقعها الرابط بين البحر والجبل.',
+      kab: 'Taɣiwant n uftis yettwassnen s tiftisin-is timeqqranin n rrmel awraɣ gar yilel d udrar.',
     },
     overview: {
       fr: 'Située sur la côte Est entre Aokas et Melbou, Souk El Tenine offre de larges plages ouvertes et constitue un point de passage stratégique vers les gorges de Kherrata.',
@@ -664,14 +678,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'melbou',
     slug: 'melbou',
-    name: { fr: 'Plages et corniche de Melbou', ar: 'شواطئ وكورنيش ملبو' },
-    commune: { fr: 'Melbou', ar: 'ملبو' },
-    region: { fr: 'Extrême Est de la Wilaya', ar: 'أقصى شرق ولاية بجاية' },
+    name: { fr: 'Plages et corniche de Melbou', ar: 'شواطئ وكورنيش ملبو', kab: 'Tiftisin d uftis n Melbu' },
+    commune: { fr: 'Melbou', ar: 'ملبو', kab: 'Melbu' },
+    region: { fr: 'Extrême Est de la Wilaya', ar: 'أقصى شرق ولاية بجاية', kab: 'Tagara tusammart n twilayt' },
     category: 'balneaire',
     secondaryCategories: ['naturel'],
     shortDescription: {
       fr: 'Commune côtière pittoresque aux confins orientaux de la Wilaya, mêlant plages claires, criques et reliefs des Babors.',
       ar: 'بلدية ساحلية جميلة في أقصى شرق الولاية، تجمع بين الشواطئ الصافية والخلجان وسفوح البابور.',
+      kab: 'Taɣiwant n uftis di tagara tusammart n twilayt, gar tiftisin ṣṣafin d yidurar n Babur.',
     },
     overview: {
       fr: 'À l’extrémité est du littoral de Béjaïa, Melbou offre une succession de plages, de criques et de falaises spectaculaires au pied des contreforts des Babors.',
@@ -703,15 +718,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'casbah-bejaia',
     slug: 'casbah-bejaia',
-    name: { fr: 'Casbah de Béjaïa', ar: 'قصبة بجاية' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Vieille ville · Centre historique', ar: 'المدينة القديمة · المركز التاريخي' },
+    name: { fr: 'Casbah de Béjaïa', ar: 'قصبة بجاية', kab: 'Lqeṣba n Bgayet' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Vieille ville · Centre historique', ar: 'المدينة القديمة · المركز التاريخي', kab: 'Tamdint taqburt · Talemmast tamezruyant' },
     category: 'historique',
     secondaryCategories: ['culturel'],
     featured: true,
     shortDescription: {
       fr: 'Citadelle historique majeure dominant le port, témoin des époques hammadite, almohade, espagnole et ottomane.',
       ar: 'قلعة تاريخية عريقة تشرف على الميناء، شاهدة على العصور الحمادية والموحدية والإسبانية والعثمانية.',
+      kab: 'Tiɣremt tamezruyant tameqqrant ɣef usagen, d inigi n talliyin taḥemmadiyt, talmuḥadiyt, taspenyulit d tɛutmanit.',
     },
     overview: {
       fr: 'Érigée sur un promontoire dominant la baie et le port de Béjaïa, la Casbah constitue l’un des ensembles monumentaux les plus importants du patrimoine historique algérien.',
@@ -750,14 +766,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'bab-el-bhar',
     slug: 'bab-el-bhar',
-    name: { fr: 'Bab El Bhar (Porte Sarrasine)', ar: 'باب البحر' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Vieille ville · Front de mer', ar: 'المدينة القديمة · الواجهة البحرية' },
+    name: { fr: 'Bab El Bhar (Porte Sarrasine)', ar: 'باب البحر', kab: 'Bab Lbaḥer (Tawwurt n Yilel)' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Vieille ville · Front de mer', ar: 'المدينة القديمة · الواجهة البحرية', kab: 'Tamdint taqburt · Aftis' },
     category: 'historique',
     featured: true,
     shortDescription: {
       fr: 'Porte maritime médiévale monumentale datant de l’époque hammadite, symbole architectural de l’ancienne En-Naciria.',
       ar: 'بوابة بحرية تاريخية تعود للعهد الحمادي، وتُعد رمزاً معمارياً لمدينة الناصرية العريقة.',
+      kab: 'Tawwurt tamezruyant n yilel seg tallit taḥemmadiyt, d azamul n tsegda n En-Naciria taqburt.',
     },
     overview: {
       fr: 'Également connue sous le nom de Porte Sarrasine, Bab El Bhar est l’un des vestiges les plus emblématiques de l’architecture hammadite à Béjaïa. Elle marquait autrefois l’accès maritime vers le port et l’arsenal médiéval.',
@@ -791,13 +808,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'remparts-hammadites',
     slug: 'remparts-hammadites',
-    name: { fr: 'Remparts hammadites', ar: 'الأسوار الحمادية' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Vieille ville de Béjaïa', ar: 'المدينة القديمة لبجاية' },
+    name: { fr: 'Remparts hammadites', ar: 'الأسوار الحمادية', kab: 'Iɣerban Iḥemmadiyen' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Vieille ville de Béjaïa', ar: 'المدينة القديمة لبجاية', kab: 'Tamdint taqburt n Bgayet' },
     category: 'historique',
     shortDescription: {
       fr: 'Vestiges de l’enceinte fortifiée médiévale qui protégeait la capitale hammadite En-Naciria entre mer et montagne.',
       ar: 'بقايا السور الدفاعي العريق الذي كان يحمي العاصمة الحمادية الناصرية بين البحر والجبل.',
+      kab: 'Later n yiɣerban imezruyanen i yettḥaraben tamanaɣt taḥemmadiyt En-Naciria gar yilel d udrar.',
     },
     overview: {
       fr: 'Fondée comme capitale par le prince hammadite En-Nacer au XIe siècle, Béjaïa fut ceinturée d’un imposant système de remparts et de portes monumentales dont subsistent plusieurs tronçons remarquables, dont Bab El Fouka.',
@@ -827,14 +845,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'fort-gouraya',
     slug: 'fort-gouraya',
-    name: { fr: 'Fort Gouraya', ar: 'حصن قوراية' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Sommet du Mont Gouraya', ar: 'قمة جبل قوراية' },
+    name: { fr: 'Fort Gouraya', ar: 'حصن قوراية', kab: 'Lberǧ n Guraya' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Sommet du Mont Gouraya', ar: 'قمة جبل قوراية', kab: 'Taqacuct n udrar n Guraya' },
     category: 'historique',
     secondaryCategories: ['montagne'],
     shortDescription: {
       fr: 'Fortification perchée au sommet du Mont Gouraya, poste de vigie historique offrant un panorama incomparable sur toute la région.',
       ar: 'تحصين تاريخي متربع على قمة جبل قوراية، يوفر إطلالة استثنائية على كامل الخليج والمنطقة.',
+      kab: 'Lberǧ amezruyan di tqacuct n udrar n Guraya, yettak-d tamuɣli ur nesɛi tamtilt ɣef temnaḍt merra.',
     },
     overview: {
       fr: 'Couronnant le sommet du Mont Gouraya, le fort veille sur le golfe de Béjaïa depuis des siècles. Son emplacement stratégique permettait de surveiller les approches maritimes et terrestres.',
@@ -864,13 +883,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'fort-sidi-abdelkader',
     slug: 'fort-sidi-abdelkader',
-    name: { fr: 'Fort Sidi Abdelkader', ar: 'حصن سيدي عبد القادر' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Front de mer · Béjaïa', ar: 'الواجهة البحرية · بجاية' },
+    name: { fr: 'Fort Sidi Abdelkader', ar: 'حصن سيدي عبد القادر', kab: 'Lberǧ n Sidi Ɛebdelqader' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Front de mer · Béjaïa', ar: 'الواجهة البحرية · بجاية', kab: 'Aftis · Bgayet' },
     category: 'historique',
     shortDescription: {
       fr: 'Ouvrage fortifié côtier gardant l’entrée du port de Béjaïa, maillon historique du système défensif maritime de la cité.',
       ar: 'حصن ساحلي تاريخي يحرس مدخل ميناء بجاية ويشكل حلقة هامة في المنظومة الدفاعية البحرية للمدينة.',
+      kab: 'Lberǧ n uftis iɛussen anekcum n usagen n Bgayet, d aḥric seg unagraw n uḥuddu n temdint.',
     },
     overview: {
       fr: 'Situé en bordure de mer à l’est du port, le Fort Sidi Abdelkader appartient au réseau de fortifications côtières qui assuraient autrefois la protection de la rade de Béjaïa.',
@@ -904,15 +924,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'musee-bordj-moussa',
     slug: 'musee-bordj-moussa',
-    name: { fr: 'Musée Bordj Moussa', ar: 'متحف برج موسى' },
-    commune: { fr: 'Béjaïa', ar: 'بجاية' },
-    region: { fr: 'Vieille ville de Béjaïa', ar: 'المدينة القديمة لبجاية' },
+    name: { fr: 'Musée Bordj Moussa', ar: 'متحف برج موسى', kab: 'Asalay n Berǧ Musa' },
+    commune: { fr: 'Béjaïa', ar: 'بجاية', kab: 'Bgayet' },
+    region: { fr: 'Vieille ville de Béjaïa', ar: 'المدينة القديمة لبجاية', kab: 'Tamdint taqburt n Bgayet' },
     category: 'historique',
     secondaryCategories: ['culturel'],
     featured: true,
     shortDescription: {
       fr: 'Ancien fort historique reconverti en musée présentant des collections archéologiques, historiques et naturalistes de Béjaïa.',
       ar: 'حصن تاريخي قديم تحول إلى متحف يضم مجموعات أثرية وتاريخية وطبيعية من ولاية بجاية.',
+      kab: 'Lberǧ amezruyan yuɣalen d asalay yeskanayen tigemmi tarxiwluǧit, tamezruyant d tagamant n Bgayet.',
     },
     overview: {
       fr: 'Installé dans l’enceinte de l’ancien fort Bordj Moussa (connu historiquement aussi sous le nom de Fort Barral), le musée de Béjaïa met en lumière l’histoire millénaire de la région, de l’Antiquité romaine de Saldae aux périodes médiévales et contemporaines.',
@@ -948,13 +969,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'village-uthrunen',
     slug: 'village-uthrunen',
-    name: { fr: 'Village d’Uthrunen', ar: 'قرية أوثرونن' },
-    commune: { fr: 'Région de Béjaïa (commune à vérifier terrain)', ar: 'منطقة بجاية (تحديد إداري قيد التحقق)' },
-    region: { fr: 'Villages traditionnels de Kabylie', ar: 'القرى التقليدية بالقبائل' },
+    name: { fr: 'Village d’Uthrunen', ar: 'قرية أوثرونن', kab: 'Taddart n Utrunen' },
+    commune: { fr: 'Région de Béjaïa (commune à vérifier terrain)', ar: 'منطقة بجاية (تحديد إداري قيد التحقق)', kab: 'Tamnaḍt n Bgayet' },
+    region: { fr: 'Villages traditionnels de Kabylie', ar: 'القرى التقليدية بالقبائل', kab: 'Tudrin tinsayanin n Leqbayel' },
     category: 'culturel',
     shortDescription: {
       fr: 'Village kabyle traditionnel illustrant l’architecture rurale montagnarde, la solidarité villageoise et la préservation des savoir-faire.',
       ar: 'قرية قبائلية تقليدية تجسّد العمارة الريفية الجبلية والتضامن القروي والحفاظ على التقاليد.',
+      kab: 'Taddart taqvaylit tansayant i d-yesskanayen tasegda n udrar, tiwizi d uḥraz n tẓuri n lejdud.',
     },
     overview: {
       fr: 'Inscrit dans la richesse des villages traditionnels de la Wilaya de Béjaïa, le village d’Uthrunen incarne l’authenticité de l’habitat kabyle en pierre et tuiles ainsi que la vie communautaire au cœur des oliveraies.',
@@ -998,15 +1020,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'toudja',
     slug: 'toudja',
-    name: { fr: 'Toudja', ar: 'توجة' },
-    commune: { fr: 'Toudja', ar: 'توجة' },
-    region: { fr: 'Ouest de Béjaïa · Massif côtier', ar: 'غرب بجاية · المرتفعات الساحلية' },
+    name: { fr: 'Toudja', ar: 'توجة', kab: 'Tuǧa' },
+    commune: { fr: 'Toudja', ar: 'توجة', kab: 'Tuǧa' },
+    region: { fr: 'Ouest de Béjaïa · Massif côtier', ar: 'غرب بجاية · المرتفعات الساحلية', kab: 'Amalu n Bgayet · Adrar n uftis' },
     category: 'culturel',
     secondaryCategories: ['naturel', 'historique'],
     featured: true,
     shortDescription: {
       fr: 'Commune montagnarde célèbre depuis l’Antiquité pour ses sources d’eau pure, ses vergers et son aqueduc romain.',
       ar: 'بلدية جبلية شهيرة منذ العصور القديمة بينابيعها العذبة وبساتينها والقناة الرومانية التاريخية.',
+      kab: 'Taɣiwant n udrar yettwassnen seg zik s tliwa-s n waman ṣṣafin, tibḥirin-is d usaka arumani.',
     },
     overview: {
       fr: 'Blottie dans un écrin de verdure à l’ouest de Béjaïa, Toudja est renommée pour l’abondance et la qualité de ses sources naturelles ainsi que pour ses villages traditionnels entourés d’orangers et d’oliviers.',
@@ -1041,15 +1064,16 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'vallee-de-la-soummam',
     slug: 'vallee-de-la-soummam',
-    name: { fr: 'Vallée de la Soummam', ar: 'وادي الصومام' },
-    commune: { fr: 'Akbou / Sidi Aïch / El Kseur / Ouzellaguen', ar: 'أقبو / سيدي عيش / القصر / أوزلاقن' },
-    region: { fr: 'Axe central de la Wilaya de Béjaïa', ar: 'المحور الأوسط لولاية بجاية' },
+    name: { fr: 'Vallée de la Soummam', ar: 'وادي الصومام', kab: 'Asif n Summam' },
+    commune: { fr: 'Akbou / Sidi Aïch / El Kseur / Ouzellaguen', ar: 'أقبو / سيدي عيش / القصر / أوزلاقن', kab: 'Aqbu / Sidi Ɛic / Leqṣer / Uzellagen' },
+    region: { fr: 'Axe central de la Wilaya de Béjaïa', ar: 'المحور الأوسط لولاية بجاية', kab: 'Abrid alemmas n twilayt n Bgayet' },
     category: 'culturel',
     secondaryCategories: ['historique', 'naturel'],
     featured: true,
     shortDescription: {
       fr: 'Artère géographique, agricole et historique majeure de la Wilaya, jalonnée d’oliveraies, de villages perchés et de hauts lieux de mémoire.',
       ar: 'شريان جغرافي وزراعي وتاريخي رئيسي في الولاية تحيط به بساتين الزيتون والقرى المعلقة ومعالم الذاكرة الوطنية.',
+      kab: 'Taneqqiṭ tagejdant n tfellaḥt d umezruy n twilayt, s tzemrin-is, tudrin-is d tkatut-is.',
     },
     overview: {
       fr: 'Traversée par l’oued Soummam jusqu’à son embouchure près de Béjaïa, cette grande vallée sépare le massif du Djurdjura et de l’Akfadou au nord des monts des Bibans et des Babor au sud.',
@@ -1087,14 +1111,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'villages-traditionnels-bejaia',
     slug: 'villages-traditionnels-bejaia',
-    name: { fr: 'Villages traditionnels de Kabylie (Béjaïa)', ar: 'القرى التقليدية لولاية بجاية' },
-    commune: { fr: 'Beni Maouche / Seddouk / Chemini / Barbacha', ar: 'بني معوش / صدوق / شمينى / برباشة' },
-    region: { fr: 'Arrière-pays montagneux de Béjaïa', ar: 'المرتفعات الداخلية لبجاية' },
+    name: { fr: 'Villages traditionnels de Kabylie (Béjaïa)', ar: 'القرى التقليدية لولاية بجاية', kab: 'Tudrin tinsayanin n Leqbayel (Bgayet)' },
+    commune: { fr: 'Beni Maouche / Seddouk / Chemini / Barbacha', ar: 'بني معوش / صدوق / شمينى / برباشة', kab: 'At Maɛuc / Sedduq / Cemini / Berbaca' },
+    region: { fr: 'Arrière-pays montagneux de Béjaïa', ar: 'المرتفعات الداخلية لبجاية', kab: 'Idurar n twilayt n Bgayet' },
     category: 'culturel',
     secondaryCategories: ['aventure'],
     shortDescription: {
       fr: 'Ensemble de villages perchés aux toits de tuiles rouges, gardiens de la langue amazighe, de la poterie et de l’oléiculture.',
       ar: 'مجموعة من القرى المعلقة ذات أسقف القرميد الأحمر، الحافظة للغة الأمازيغية والفخار وزراعة الزيتون.',
+      kab: 'Tudrin s ssqef n uqermud azeggaɣ, iḥerzen tutlayt tamaziɣt, afexxar d tzemrin.',
     },
     overview: {
       fr: 'Des crêtes des Ath Abbas aux collines de Chemini et de Beni Maouche (réputée pour ses figues), les villages traditionnels de Béjaïa offrent un patrimoine vivant d’architecture vernaculaire et de savoir-faire.',
@@ -1129,14 +1154,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'sources-thermales-tifra',
     slug: 'sources-thermales-tifra',
-    name: { fr: 'Sources thermales de Tifra (Sidi Yahia El Aidli)', ar: 'الحمامات المعدنية لتيفرة (سيدي يحيى العيدلي)' },
-    commune: { fr: 'Tifra / Sidi Aïch', ar: 'تيفرة / سيدي عيش' },
-    region: { fr: 'Vallée de la Soummam · Versant nord', ar: 'وادي الصومام · السفح الشمالي' },
+    name: { fr: 'Sources thermales de Tifra (Sidi Yahia El Aidli)', ar: 'الحمامات المعدنية لتيفرة (سيدي يحيى العيدلي)', kab: 'Lḥemmam n Tifra (Sidi Yeḥya Lɛidli)' },
+    commune: { fr: 'Tifra / Sidi Aïch', ar: 'تيفرة / سيدي عيش', kab: 'Tifra / Sidi Ɛic' },
+    region: { fr: 'Vallée de la Soummam · Versant nord', ar: 'وادي الصومام · السفح الشمالي', kab: 'Asif n Summam · Agafa' },
     category: 'thermal',
     featured: true,
     shortDescription: {
       fr: 'Station thermale réputée de la Wilaya de Béjaïa, nichée dans un vallon boisé propice au repos et au bien-être.',
       ar: 'محطة حموية معروفة في ولاية بجاية تقع وسط وادٍ مشجر مثالي للراحة والاستجمام.',
+      kab: 'Amkan n lḥemmam yettwassnen deg twilayt n Bgayet, gar tẓegwa i usteɛfu d tezmert.',
     },
     overview: {
       fr: 'Situées dans la région de Tifra près de Sidi Aïch, les sources thermales de Sidi Yahia El Aidli comptent parmi les destinations de tourisme thermal les plus fréquentées de la Wilaya de Béjaïa.',
@@ -1170,14 +1196,15 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'sources-thermales-adekar',
     slug: 'sources-thermales-adekar',
-    name: { fr: 'Sources thermales d’Adekar', ar: 'الينابيع الحموية لأدكار' },
-    commune: { fr: 'Adekar', ar: 'أدكار' },
-    region: { fr: 'Massif de l’Akfadou · Ouest de Béjaïa', ar: 'مرتفعات أكفادو · غرب بجاية' },
+    name: { fr: 'Sources thermales d’Adekar', ar: 'الينابيع الحموية لأدكار', kab: 'Tiliwa n waman iḥmayanen n Adekar' },
+    commune: { fr: 'Adekar', ar: 'أدكار', kab: 'Adekar' },
+    region: { fr: 'Massif de l’Akfadou · Ouest de Béjaïa', ar: 'مرتفعات أكفادو · غرب بجاية', kab: 'Adrar n Akfadu · Amalu n Bgayet' },
     category: 'thermal',
     secondaryCategories: ['naturel'],
     shortDescription: {
       fr: 'Sources thermales nichées en lisière des forêts d’Adekar et de l’Akfadou, au cœur d’un paysage montagnard préservé.',
       ar: 'ينابيع حموية تقع على مشارف غابات أدكار وأكفادو وسط طبيعة جبلية نقية.',
+      kab: 'Tiliwa n waman iḥmayanen ɣef yidis n tẓegwa n Adekar d Akfadu, deg ugama iḥerzen.',
     },
     overview: {
       fr: 'La commune forestière d’Adekar associe le charme des hauteurs de l’Akfadou à un potentiel thermal naturel reconnu dans l’inventaire touristique de la Wilaya.',
@@ -1217,13 +1244,14 @@ export const DESTINATIONS: Destination[] = [
   {
     id: 'sources-thermales-bouhamza',
     slug: 'sources-thermales-bouhamza',
-    name: { fr: 'Sources thermales de Bouhamza (Hammam Sillal)', ar: 'الينابيع الحموية لبوحمزة (حمام سلال)' },
-    commune: { fr: 'Bouhamza', ar: 'بوحمزة' },
-    region: { fr: 'Sud de la vallée de la Soummam', ar: 'جنوب وادي الصومام' },
+    name: { fr: 'Sources thermales de Bouhamza (Hammam Sillal)', ar: 'الينابيع الحموية لبوحمزة (حمام سلال)', kab: 'Tiliwa n waman iḥmayanen n Buḥemza (Ḥemmam Sillal)' },
+    commune: { fr: 'Bouhamza', ar: 'بوحمزة', kab: 'Buḥemza' },
+    region: { fr: 'Sud de la vallée de la Soummam', ar: 'جنوب وادي الصومام', kab: 'Anẓul n wasif n Summam' },
     category: 'thermal',
     shortDescription: {
       fr: 'Site thermal traditionnel connu dans la région de Seddouk et Bouhamza, fréquenté pour ses eaux chaudes naturelles.',
       ar: 'موقع حموي تقليدي معروف في منطقة صدوق وبوحمزة بمياهه الساخنة الطبيعية.',
+      kab: 'Amkan n lḥemmam ansayan yettwassnen di temnaḍt n Sedduq d Buḥemza s waman-is iḥmayanen.',
     },
     overview: {
       fr: 'Sur le versant sud de la vallée de la Soummam, la commune de Bouhamza abrite des sources thermales naturelles (notamment Hammam Sillal) inscrites parmi les sites thermaux de la Wilaya de Béjaïa.',

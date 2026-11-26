@@ -72,10 +72,12 @@ export const HISTORICAL_ERAS: HistoricalEra[] = [
     title: {
       fr: 'Des abris préhistoriques à la cité romaine de Saldae',
       ar: 'من مستوطنات ما قبل التاريخ إلى مدينة صالدا الرومانية',
+      kab: 'Seg yifriwen iqdimen ɣer temdint tarumanit n Saldae',
     },
     subtitle: {
       fr: 'Comptoir côtier numide puis colonie maritime romaine alimentée par l’aqueduc de Toudja',
       ar: 'محطة ساحلية نوميدية ثم مستوطنة بحرية رومانية زُوّدت بقناة المياه من توجة',
+      kab: 'Asagen anumidi sakkin tamdint tarumanit yettwaččan s usaka n Tuǧa',
     },
     summary: {
       fr: 'Bien avant la fondation médiévale d’En-Naciria, la rade protégée par le massif de Gouraya abrita des populations préhistoriques et un établissement antique connu sous le nom de Saldae.',
@@ -133,10 +135,12 @@ export const HISTORICAL_ERAS: HistoricalEra[] = [
     title: {
       fr: 'En-Naciria, capitale hammadide rayonnante en Méditerranée',
       ar: 'الناصرية، العاصمة الحمادية المشعة في البحر المتوسط',
+      kab: 'En-Naciria, tamanaɣt taḥemmadiyt yettfeǧǧiǧen deg Yilel Agrakal',
     },
     subtitle: {
       fr: 'Fondation princière par En-Nacer ben Alennas, édification des remparts, des palais et de Bab El Bhar',
       ar: 'التأسيس الأميري على يد الناصر بن علناس وبناء الأسوار والقصور وباب البحر',
+      kab: 'Asnulfu sɣur En-Nacer ben Alennas, lebni n yiɣerban, iɣerman d Bab Lbaḥer',
     },
     summary: {
       fr: 'Au XIe siècle, le souverain hammadide En-Nacer transfère sa capitale vers Béjaïa, baptisée En-Naciria. La ville devient en quelques décennies l’une des métropoles politiques, portuaires et artistiques majeures du Maghreb médiéval.',
@@ -190,10 +194,12 @@ export const HISTORICAL_ERAS: HistoricalEra[] = [
     title: {
       fr: 'La cité savante de Fibonacci, d’Ibn Khaldoun et des maîtres de Kabylie',
       ar: 'حاضرة العلماء: فيبوناتشي وابن خلدون وأعلام بجاية',
+      kab: 'Tamdint n tmussni n Fibonacci, Ibn Xeldun d yimussnawen n Leqbayel',
     },
     subtitle: {
       fr: 'Rencontre des sciences mathématiques, du droit, du soufisme et de l’historiographie méditerranéenne',
       ar: 'ملتقى علوم الرياضيات والفقه والتصوف والتاريخ في حوض المتوسط',
+      kab: 'Timlilit n tusnakt, azref, tamedyazt d umezruy agrakal',
     },
     summary: {
       fr: 'Après les Hammadides et sous les Almohades puis les Hafsides, Béjaïa conserve un prestige intellectuel exceptionnel. Savants locaux et voyageurs venus des deux rives y échangent manuscrits, savoirs mathématiques et pensée philosophique.',
@@ -243,10 +249,12 @@ export const HISTORICAL_ERAS: HistoricalEra[] = [
     title: {
       fr: 'Des conflits maritimes du XVIe siècle aux bastions ottomans',
       ar: 'من الصراعات البحرية في القرن 16م إلى التحصينات العثمانية',
+      kab: 'Seg yimenɣiyen n yilel n lqern XVI ɣer yiberǧen iɛutmaniyen',
     },
     subtitle: {
       fr: 'Consolidation de la Casbah, édification de Bordj Moussa, de Fort Sidi Abdelkader et de Fort Gouraya',
       ar: 'ترميم القصبة وبناء برج موسى وحصن سيدي عبد القادر وحصن قوراية',
+      kab: 'Aseǧhed n Lqeṣba, lebni n Berǧ Musa, Sidi Ɛebdelqader d Guraya',
     },
     summary: {
       fr: 'Au XVIe siècle, Béjaïa est au cœur des rivalités navales en Méditerranée occidentale. Après l’occupation espagnole (1510–1555) et la libération par Salah Raïs, la période ottomane renforce le système défensif qui domine encore la ville.',
@@ -292,10 +300,12 @@ export const HISTORICAL_ERAS: HistoricalEra[] = [
     title: {
       fr: 'De la vallée de la Soummam (1956) au patrimoine culturel contemporain',
       ar: 'من وادي الصومام (1956) إلى التراث الثقافي والطبيعي المعاصر',
+      kab: 'Seg wasif n Summam (1956) ɣer tgemmi tadelsant tatrart',
     },
     subtitle: {
       fr: 'Congrès de la Soummam, villages de montagne, préservation UNESCO de Gouraya et essor culturel',
       ar: 'مؤتمر الصومام، القرى الجبلية، حماية اليونسكو لقوراية والنهضة الثقافية',
+      kab: 'Agraw n Summam, tudrin n yidurar, aḥraz UNESCO n Guraya d tneflit tadelsant',
     },
     summary: {
       fr: 'À l’époque contemporaine, la Wilaya de Béjaïa est marquée par son rôle majeur dans l’histoire nationale — notamment le Congrès de la Soummam d’août 1956 — et par la vitalité de ses villages, de sa langue et de ses espaces protégés.',

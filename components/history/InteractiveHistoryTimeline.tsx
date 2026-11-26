@@ -31,78 +31,88 @@ interface TimelineNodeMeta {
 
 const TIMELINE_NODE_META: Record<EraSlug, TimelineNodeMeta> = {
   antiquite: {
-    shortLabel: { fr: 'Saldae (Romaine)', ar: 'صالدا (الرومانية)' },
-    centuryBadge: { fr: 'Ier av. – Ve s.', ar: 'ق.م – القرن 5م' },
+    shortLabel: { fr: 'Saldae (Romaine)', ar: 'صالدا (الرومانية)', kab: 'Saldae (Tarumanit)' },
+    centuryBadge: { fr: 'Ier av. – Ve s.', ar: 'ق.م – القرن 5م', kab: 'I av. – V s.' },
     additionalPoints: [
       {
         fr: 'Colonie maritime romaine Colonia Julia Augusta Saldensium',
         ar: 'مستوطنة صالدا البحرية الرومانية',
+        kab: 'Tamdint n yilel tarumanit Colonia Julia Augusta Saldensium',
       },
       {
         fr: 'Tunnel hydraulique de Nonius Datus (aqueduc de Toudja, ~21 km)',
         ar: 'نفق المياه لنونيوس داتوس (قناة توجة، ق. 21 كم)',
+        kab: 'Asaka n waman n Nonius Datus (Tuǧa, ~21 km)',
       },
     ],
   },
   hammadide: {
-    shortLabel: { fr: 'Hammadite', ar: 'العهد الحمادي' },
-    centuryBadge: { fr: '1067 – 1152', ar: '1067 – 1152م' },
+    shortLabel: { fr: 'Hammadite', ar: 'العهد الحمادي', kab: 'Taḥemmadiyt' },
+    centuryBadge: { fr: '1067 – 1152', ar: '1067 – 1152م', kab: '1067 – 1152' },
     additionalPoints: [
       {
         fr: 'Fondation d’En-Naciria et transfert de la capitale depuis la Kalâa',
         ar: 'تأسيس الناصرية ونقل العاصمة من قلعة بني حماد',
+        kab: 'Asnulfu n En-Naciria d usniger n tmanaɣt seg Lqelɛa n At Ḥemmad',
       },
       {
         fr: 'Porte maritime Bab El Bhar, palais princiers et essor de la cire',
         ar: 'باب البحر والقصور الأميرية وتجارة الشمع البجاوي',
+        kab: 'Tawwurt n Bab Lbaḥer, iɣerman d tnezzut n tcemaɛt n Bgayet',
       },
     ],
   },
   'medieval-savant': {
-    shortLabel: { fr: 'Médiévale savante', ar: 'الحاضرة العلمية' },
-    centuryBadge: { fr: 'XIIe – XVe s.', ar: 'القرون 12 – 15م' },
+    shortLabel: { fr: 'Médiévale savante', ar: 'الحاضرة العلمية', kab: 'Tallit n tmussni' },
+    centuryBadge: { fr: 'XIIe – XVe s.', ar: 'القرون 12 – 15م', kab: 'XII – XV s.' },
     additionalPoints: [
       {
         fr: 'Séjour de Fibonacci (chiffres indo-arabes, Liber Abaci)',
         ar: 'إقامة فيبوناتشي وتعلم الحساب العربي-الهندي',
+        kab: 'Tadukli n Fibonacci (imḍanen d uselmed n tusnakt di Bgayet)',
       },
       {
         fr: 'Rayonnement d’Ibn Khaldoun, El-Waghlissi et Sidi Boumediene',
         ar: 'إشعاع ابن خلدون والوغليسي وسيدي بومدين',
+        kab: 'Tafawt n Ibn Xeldun, Lweɣlisi d Sidi Bumedyen',
       },
     ],
   },
   'ottoman-espagnol': {
-    shortLabel: { fr: 'Ottomane', ar: 'العهد العثماني' },
-    centuryBadge: { fr: '1510 – 1830', ar: '1510 – 1830م' },
+    shortLabel: { fr: 'Ottomane', ar: 'العهد العثماني', kab: 'Taɛutmanit' },
+    centuryBadge: { fr: '1510 – 1830', ar: '1510 – 1830م', kab: '1510 – 1830' },
     additionalPoints: [
       {
         fr: 'Libération par Salah Raïs (1555) et intégration à la Régence d’Alger',
         ar: 'تحرير المدينة على يد صالح رايس (1555م) ضمن إيالة الجزائر',
+        kab: 'Aslelli sɣur Ṣalaḥ Rayes (1555) d unekcum ɣer Lezzayer',
       },
       {
         fr: 'Système défensif : Casbah, Bordj Moussa, Fort Sidi Abdelkader & Gouraya',
         ar: 'المنظومة الدفاعية: القصبة، برج موسى، سيدي عبد القادر وقوراية',
+        kab: 'Anagraw n uḥuddu: Lqeṣba, Berǧ Musa, Sidi Ɛebdelqader & Guraya',
       },
     ],
   },
   contemporain: {
-    shortLabel: { fr: 'Coloniale & Moderne', ar: 'الاستعمارية والمعاصرة' },
-    centuryBadge: { fr: '1833 – XXIe s.', ar: '1833 – القرن 21م' },
+    shortLabel: { fr: 'Coloniale & Moderne', ar: 'الاستعمارية والمعاصرة', kab: 'Tamirant & Tatrart' },
+    centuryBadge: { fr: '1833 – XXIe s.', ar: '1833 – القرن 21م', kab: '1833 – XXI s.' },
     additionalPoints: [
       {
         fr: 'Période coloniale (à partir de 1833) et résistance des populations de Kabylie',
         ar: 'الحقبة الاستعمارية (منذ 1833م) ومقاومة سكان المنطقة',
+        kab: 'Tallit n umnekcam (seg 1833) d uzbu n yimezdaɣ n Leqbayel',
       },
       {
         fr: '20 août 1956 : Congrès historique de la Soummam à Ifri Ouzellaguen',
         ar: '20 أوت 1956: مؤتمر الصومام التاريخي بإفري أوزلاقن',
+        kab: '20 ɣuct 1956: Agraw amezruyan n Summam deg Yifri Uzellagen',
       },
     ],
   },
   'patrimoine-naturel': {
-    shortLabel: { fr: 'Patrimoine naturel', ar: 'التراث الطبيعي' },
-    centuryBadge: { fr: 'UNESCO', ar: 'اليونسكو' },
+    shortLabel: { fr: 'Patrimoine naturel', ar: 'التراث الطبيعي', kab: 'Tagemmi tagamant' },
+    centuryBadge: { fr: 'UNESCO', ar: 'اليونسكو', kab: 'UNESCO' },
     additionalPoints: [],
   },
 };
