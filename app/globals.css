@@ -206,6 +206,66 @@ html.immersive-reading nav[aria-label="Fil d'Ariane"] {
   display: none !important;
 }
 
+/* Scoped Navbar Right-Zone Icon Harmonization */
+.site-header-nav-right-icons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.site-header-nav-right-icons .nav-action-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  box-shadow: none;
+  color: var(--accent-med);
+  flex-shrink: 0;
+}
+
+.site-header-nav-right-icons .nav-action-button:hover,
+.site-header-nav-right-icons .nav-action-button:active,
+.site-header-nav-right-icons .nav-action-button[aria-expanded="true"] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.site-header-nav-right-icons .nav-action-button.nav-action-lang {
+  transition: color 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header-nav-right-icons .nav-action-button.nav-action-lang:hover {
+  color: var(--ink-heading);
+}
+
+html.dark .site-header-nav-right-icons .nav-action-button.nav-action-lang:hover {
+  color: #FFFFFF;
+}
+
+.site-header-nav-right-icons .nav-action-button svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  stroke: var(--accent-med);
+  stroke-width: 2;
+  transition: stroke 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header-nav-right-icons .nav-action-button:hover svg,
+.site-header-nav-right-icons .nav-action-button[aria-expanded="true"] svg {
+  stroke: var(--ink-heading);
+}
+
+html.dark .site-header-nav-right-icons .nav-action-button:hover svg,
+html.dark .site-header-nav-right-icons .nav-action-button[aria-expanded="true"] svg {
+  stroke: #FFFFFF;
+}
+
 /* Print-ready A4 Field Dossier Styling */
 @media print {
   header,

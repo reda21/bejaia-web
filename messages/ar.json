@@ -17,7 +17,12 @@
     "contact": "اتصل بنا",
     "favorites": "الدفتـر",
     "search": "بحث",
-    "menu": "القائمة"
+    "menu": "القائمة",
+    "skipToContent": "الانتقال إلى المحتوى الرئيسي",
+    "cycleLanguageHint": "تغيير اللغة",
+    "announcementLanguage": "اللغة النشطة:",
+    "announcementThemeLight": "تم تفعيل الوضع الفاتح",
+    "announcementThemeDark": "تم تفعيل الوضع الداكن"
   },
   "hero": {
     "kicker": "ولاية بجاية · الجزائر · البحر الأبيض المتوسط",

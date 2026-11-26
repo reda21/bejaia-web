@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -24,6 +24,7 @@ import { DESTINATIONS, getDestinationBySlug } from '@/data/destinations';
 import { GlobalSearchModal } from '@/components/ui/GlobalSearchModal';
 import { ItineraryModal } from '@/components/circuits/ItineraryModal';
 import { PWAInstallButton, OfflinePackButton } from '@/components/pwa/PWAControls';
+import { NavActionTooltip } from '@/components/layout/NavActionTooltip';
 import type { Locale, ThemePreference } from '@/types';
 
 const LOCALES: { code: Locale; label: string; title: string }[] = [
@@ -32,11 +33,16 @@ const LOCALES: { code: Locale; label: string; title: string }[] = [
   { code: 'kab', label: 'KAB', title: 'Taqvaylit / Tamazight' },
 ];
 
+function formatBadgeCount(count: number): string {
+  return count > 99 ? '99+' : String(count);
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const {
     locale,
     setLocale,
+    isRtl,
     theme,
     resolvedTheme,
     setTheme,
@@ -51,7 +57,9 @@ export function SiteHeader() {
     deleteDestinationNote,
     favoritesOpen,
     setFavoritesOpen,
+    searchOpen,
     setSearchOpen,
+    itineraryOpen,
     setItineraryOpen,
     customCircuitSlugs,
     exportJournalBundle,
@@ -61,7 +69,97 @@ export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [drawerTab, setDrawerTab] = useState<'favorites' | 'visited' | 'notes'>('favorites');
   const [importFeedback, setImportFeedback] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [liveAnnouncement, setLiveAnnouncement] = useState('');
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const mobileMenuBtnRef = useRef<HTMLButtonElement>(null);
+  const prevLocaleRef = useRef<Locale | null>(null);
+  const prevThemeRef = useRef<'light' | 'dark' | null>(null);
+
+  // Scroll elevation & GPU-composited hairline progress tracking
+  useEffect(() => {
+    let rafId = 0;
+
+    const updateScroll = () => {
+      rafId = 0;
+      const y = window.scrollY || 0;
+      setIsScrolled(y > 12);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(maxScroll > 0 ? Math.min(1, Math.max(0, y / maxScroll)) : 0);
+    };
+
+    const onScroll = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(updateScroll);
+      }
+    };
+
+    updateScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [pathname]);
+
+  // Polite screen-reader announcements when language or theme switches
+  useEffect(() => {
+    if (prevLocaleRef.current === null) {
+      prevLocaleRef.current = locale;
+      return;
+    }
+    if (prevLocaleRef.current === locale) return;
+    prevLocaleRef.current = locale;
+    const locObj = LOCALES.find((l) => l.code === locale);
+    const timer = window.setTimeout(() => {
+      setLiveAnnouncement(`${t('nav.announcementLanguage')} ${locObj?.title ?? locale}`);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [locale, t]);
+
+  useEffect(() => {
+    if (prevThemeRef.current === null) {
+      prevThemeRef.current = resolvedTheme;
+      return;
+    }
+    if (prevThemeRef.current === resolvedTheme) return;
+    prevThemeRef.current = resolvedTheme;
+    const msg =
+      resolvedTheme === 'dark' ? t('nav.announcementThemeDark') : t('nav.announcementThemeLight');
+    const timer = window.setTimeout(() => {
+      setLiveAnnouncement(msg);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [resolvedTheme, t]);
+
+  // Mobile drawer Escape handling, focus restoration, and body scroll lock
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setMobileMenuOpen(false);
+        window.requestAnimationFrame(() => {
+          mobileMenuBtnRef.current?.focus();
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   const navItems = [
     { href: '/', label: t('nav.home') },
@@ -73,6 +171,32 @@ export function SiteHeader() {
     { href: '/carte', label: t('nav.map') },
     { href: '/guide-pratique', label: t('nav.guide') },
   ];
+
+  // Roving Left/Right/Home/End keyboard navigation across primary desktop links
+  const handleNavKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    const links = Array.from(navRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? []);
+    if (links.length === 0) return;
+
+    const activeIdx = links.indexOf(document.activeElement as HTMLAnchorElement);
+    if (activeIdx === -1) return;
+
+    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    const prevKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+
+    if (e.key === nextKey) {
+      e.preventDefault();
+      links[(activeIdx + 1) % links.length].focus();
+    } else if (e.key === prevKey) {
+      e.preventDefault();
+      links[(activeIdx - 1 + links.length) % links.length].focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      links[0].focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      links[links.length - 1].focus();
+    }
+  };
 
   const favoriteDestinations = DESTINATIONS.filter(
     (d) => favorites.includes(d.id) || favorites.includes(d.slug)
@@ -108,13 +232,39 @@ export function SiteHeader() {
     setTimeout(() => setImportFeedback(null), 4000);
   };
 
+  const currentLocIndex = LOCALES.findIndex((loc) => loc.code === locale);
+  const safeLocIndex = currentLocIndex === -1 ? 0 : currentLocIndex;
+  const currentLoc = LOCALES[safeLocIndex];
+  const nextLoc = LOCALES[(safeLocIndex + 1) % LOCALES.length];
+
+  const itineraryCount = customCircuitSlugs.length;
+  const favoritesCount = favorites.length;
+
   return (
     <>
-      <header className="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#103B50]/10">
+      <header
+        className={`no-print sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-200 ${
+          isScrolled
+            ? 'bg-white/90 backdrop-blur-md border-[#103B50]/15 shadow-[0_2px_14px_rgba(16,59,80,0.07)]'
+            : 'bg-white/95 backdrop-blur-sm border-[#103B50]/10'
+        }`}
+      >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-4 focus:z-50 focus:px-3.5 focus:py-2 focus:rounded-md focus:bg-[#103B50] focus:text-white focus:text-xs focus:font-semibold focus:shadow-lg"
+        >
+          {t('nav.skipToContent')}
+        </a>
+
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          {liveAnnouncement}
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Zone 1: Single-line Brand Wordmark */}
           <Link
             href="/"
+            aria-current={pathname === '/' ? 'page' : undefined}
             className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-[#103B50] hover:text-[#087E9B] transition-colors whitespace-nowrap shrink-0"
           >
             {t('brand.name')}
@@ -122,6 +272,8 @@ export function SiteHeader() {
 
           {/* Zone 2: Primary Navigation */}
           <nav
+            ref={navRef}
+            onKeyDown={handleNavKeyDown}
             aria-label="Navigation principale"
             className="hidden xl:flex items-center gap-4 text-[13px] font-medium text-[#103B50]/85"
           >
@@ -132,147 +284,197 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 ${
-                    active
-                      ? 'border-[#087E9B] text-[#103B50]'
-                      : 'border-transparent hover:text-[#087E9B] hover:border-[#087E9B]/40'
+                  aria-current={active ? 'page' : undefined}
+                  className={`group relative py-1.5 transition-colors whitespace-nowrap shrink-0 ${
+                    active ? 'text-[#103B50]' : 'hover:text-[#087E9B]'
                   }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-[#087E9B] origin-start transition-transform duration-200 ${
+                      active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}
+                  />
                 </Link>
               );
             })}
           </nav>
 
-          {/* Zone 3: Global Search + Language + PWA Install + Explorer Journal + Mobile Trigger */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              aria-label={t('nav.search')}
-              title={`${t('nav.search')} (Ctrl+K)`}
-              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
-            >
-              <Search className="w-3.5 h-3.5" strokeWidth={2} />
-            </button>
+          {/* Zone 3: Harmonized Right-Side Action Icons & Conditional Terracotta Badges */}
+          <div className="site-header-nav-right-icons flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="relative inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                aria-label={`${t('nav.search')} (Ctrl+K)`}
+                aria-describedby="tooltip-nav-search"
+                aria-expanded={searchOpen}
+                className="peer nav-action-button"
+              >
+                <Search className="w-3.5 h-3.5" strokeWidth={2} />
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-search"
+                label={t('nav.search')}
+                shortcut="Ctrl+K"
+              />
+            </div>
 
-            <div className="hidden md:block">
+            <div className="hidden md:inline-flex items-center">
               <PWAInstallButton headerMinimal />
             </div>
 
-            {(() => {
-              const currentIndex = LOCALES.findIndex((loc) => loc.code === locale);
-              const safeIndex = currentIndex === -1 ? 0 : currentIndex;
-              const currentLoc = LOCALES[safeIndex];
-              const nextLoc = LOCALES[(safeIndex + 1) % LOCALES.length];
-              return (
-                <button
-                  type="button"
-                  onClick={() => setLocale(nextLoc.code)}
-                  lang={currentLoc.code}
-                  title={`Langue active : ${currentLoc.title} — Cliquer pour passer à : ${nextLoc.title}`}
-                  aria-label={`Langue active : ${currentLoc.title} — Prochaine langue : ${nextLoc.title}`}
-                  className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] text-xs font-bold tracking-tight uppercase transition-[color] duration-150 shrink-0"
-                >
-                  {currentLoc.label}
-                </button>
-              );
-            })()}
-
-            <button
-              type="button"
-              onClick={toggleTheme}
-              aria-label={
-                resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
-              }
-              aria-pressed={resolvedTheme === 'dark'}
-              title={
-                resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
-              }
-              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
-            >
-              <Moon className="w-3.5 h-3.5 dark:hidden" strokeWidth={2} />
-              <Sun className="w-3.5 h-3.5 hidden dark:block" strokeWidth={2} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setItineraryOpen(true)}
-              aria-label={
-                customCircuitSlugs.length > 0
-                  ? `${t('itinerary.buttonLabel')} (${customCircuitSlugs.length})`
-                  : t('itinerary.buttonLabel')
-              }
-              title={
-                customCircuitSlugs.length > 0
-                  ? `${t('itinerary.buttonLabel')} (${customCircuitSlugs.length})`
-                  : t('itinerary.buttonLabel')
-              }
-              className="group inline-flex items-center gap-1.5 px-2.5 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-xs font-medium text-[#103B50] shrink-0"
-            >
-              <span
-                className={`relative inline-flex items-center justify-center shrink-0 ${
-                  customCircuitSlugs.length > 0 ? 'lg:me-1' : ''
-                }`}
+            <div className="relative inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => setLocale(nextLoc.code)}
+                lang={currentLoc.code}
+                aria-label={`${t('nav.cycleLanguageHint')} — ${currentLoc.title} → ${nextLoc.title}`}
+                aria-describedby="tooltip-nav-lang"
+                className="peer nav-action-button nav-action-lang text-xs font-bold tracking-tight uppercase"
               >
-                <Route
-                  className="w-3.5 h-3.5 text-[#087E9B] group-hover:text-[#103B50] dark:group-hover:text-white transition-[color,stroke] duration-150 shrink-0"
-                  strokeWidth={2}
-                />
-                {customCircuitSlugs.length > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
-                  >
-                    {customCircuitSlugs.length}
-                  </span>
-                )}
-              </span>
-              <span className="hidden lg:inline">{t('itinerary.buttonLabel')}</span>
-            </button>
+                {currentLoc.label}
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-lang"
+                label={`${currentLoc.title} → ${nextLoc.title}`}
+                shortcut="Alt+L"
+              />
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setFavoritesOpen(true)}
-              aria-label={
-                favorites.length > 0
-                  ? `${t('nav.favorites')} (${favorites.length})`
-                  : t('nav.favorites')
-              }
-              title={
-                favorites.length > 0
-                  ? `${t('nav.favorites')} (${favorites.length})`
-                  : t('nav.favorites')
-              }
-              className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
-            >
-              <span className="relative inline-flex items-center justify-center">
-                <Heart className="w-3.5 h-3.5" strokeWidth={2} />
-                {favorites.length > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
-                  >
-                    {favorites.length}
-                  </span>
-                )}
-              </span>
-            </button>
+            <div className="relative inline-flex items-center">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={
+                  resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
+                }
+                aria-describedby="tooltip-nav-theme"
+                aria-pressed={resolvedTheme === 'dark'}
+                className="peer nav-action-button"
+              >
+                <Moon className="w-3.5 h-3.5 dark:hidden" strokeWidth={2} />
+                <Sun className="w-3.5 h-3.5 hidden dark:block" strokeWidth={2} />
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-theme"
+                label={
+                  resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
+                }
+                shortcut="Alt+T"
+              />
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              aria-label={t('nav.menu')}
-              aria-expanded={mobileMenuOpen}
-              className="xl:hidden inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-3.5 h-3.5" strokeWidth={2} />
-              ) : (
-                <Menu className="w-3.5 h-3.5" strokeWidth={2} />
-              )}
-            </button>
+            <div className="relative inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => setItineraryOpen(true)}
+                aria-label={
+                  itineraryCount > 0
+                    ? `${t('itinerary.buttonLabel')} (${itineraryCount})`
+                    : t('itinerary.buttonLabel')
+                }
+                aria-describedby="tooltip-nav-itinerary"
+                aria-expanded={itineraryOpen}
+                className="peer nav-action-button !w-auto px-2 gap-1.5"
+              >
+                <span
+                  className={`relative inline-flex items-center justify-center shrink-0 ${
+                    itineraryCount > 0 ? 'lg:me-1' : ''
+                  }`}
+                >
+                  <Route className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                  {itineraryCount > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white ring-[1.5px] ring-white dark:ring-[#10222E] text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
+                    >
+                      {formatBadgeCount(itineraryCount)}
+                    </span>
+                  )}
+                </span>
+                <span className="hidden lg:inline text-xs font-medium text-[#103B50]">
+                  {t('itinerary.buttonLabel')}
+                </span>
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-itinerary"
+                label={
+                  itineraryCount > 0
+                    ? `${t('itinerary.buttonLabel')} (${itineraryCount})`
+                    : t('itinerary.buttonLabel')
+                }
+                shortcut="Alt+I"
+              />
+            </div>
+
+            <div className="relative inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => setFavoritesOpen(true)}
+                aria-label={
+                  favoritesCount > 0
+                    ? `${t('nav.favorites')} (${favoritesCount})`
+                    : t('nav.favorites')
+                }
+                aria-describedby="tooltip-nav-favorites"
+                aria-expanded={favoritesOpen}
+                className="peer nav-action-button"
+              >
+                <span className="relative inline-flex items-center justify-center">
+                  <Heart className="w-3.5 h-3.5" strokeWidth={2} />
+                  {favoritesCount > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white ring-[1.5px] ring-white dark:ring-[#10222E] text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
+                    >
+                      {formatBadgeCount(favoritesCount)}
+                    </span>
+                  )}
+                </span>
+              </button>
+              <NavActionTooltip
+                id="tooltip-nav-favorites"
+                label={
+                  favoritesCount > 0
+                    ? `${t('nav.favorites')} (${favoritesCount})`
+                    : t('nav.favorites')
+                }
+                shortcut="Alt+F"
+              />
+            </div>
+
+            <div className="relative inline-flex items-center xl:hidden">
+              <button
+                ref={mobileMenuBtnRef}
+                type="button"
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                aria-label={t('nav.menu')}
+                aria-describedby="tooltip-nav-menu"
+                aria-expanded={mobileMenuOpen}
+                className="peer nav-action-button"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-3.5 h-3.5" strokeWidth={2} />
+                ) : (
+                  <Menu className="w-3.5 h-3.5" strokeWidth={2} />
+                )}
+              </button>
+              <NavActionTooltip id="tooltip-nav-menu" label={t('nav.menu')} />
+            </div>
           </div>
+        </div>
+
+        {/* GPU-composited hairline scroll progress indicator */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] overflow-hidden"
+        >
+          <div
+            className="h-full w-full bg-[#087E9B] origin-start transition-transform duration-75"
+            style={{ transform: `scaleX(${scrollProgress})` }}
+          />
         </div>
 
         {/* Honest Kabyle Linguistic Validation Notice */}
@@ -284,7 +486,7 @@ export function SiteHeader() {
 
         {/* Mobile / Tablet Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-white border-t border-[#103B50]/10 px-4 py-4 space-y-1 shadow-lg">
+          <div className="xl:hidden bg-white border-t border-[#103B50]/10 px-4 py-4 space-y-1 shadow-lg max-h-[calc(100dvh-4rem)] overflow-y-auto">
             {navItems.map((item) => {
               const active =
                 item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -292,8 +494,9 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={active ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center min-h-[44px] px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                     active
                       ? 'bg-[#F4EFE5] text-[#103B50]'
                       : 'text-[#103B50]/80 hover:bg-[#FAF8F3]'

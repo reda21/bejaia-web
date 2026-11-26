@@ -214,18 +214,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     }
   }, [locale, hydrated]);
 
-  // Global keyboard shortcut Cmd/Ctrl + K for encyclopedic search
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setSearchOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
-
   useEffect(() => {
     return () => {
       if (localeFadeTimerRef.current) {
@@ -272,6 +260,50 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       return currentlyDark ? 'light' : 'dark';
     });
   }, [systemDark]);
+
+  // Global keyboard shortcuts: Cmd/Ctrl+K (Search), Alt+I (Itinerary), Alt+F (Favorites), Alt+T (Theme), Alt+L (Language)
+  useEffect(() => {
+    const LOCALE_ORDER: Locale[] = ['fr', 'ar', 'kab'];
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isEditable = Boolean(
+        target &&
+          (target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            target.tagName === 'SELECT' ||
+            target.isContentEditable)
+      );
+
+      if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+        return;
+      }
+
+      if (isEditable || !e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+      const key = e.key.toLowerCase();
+      if (key === 'i') {
+        e.preventDefault();
+        setItineraryOpen((prev) => !prev);
+      } else if (key === 'f') {
+        e.preventDefault();
+        setFavoritesOpen((prev) => !prev);
+      } else if (key === 't') {
+        e.preventDefault();
+        toggleTheme();
+      } else if (key === 'l') {
+        e.preventDefault();
+        const idx = LOCALE_ORDER.indexOf(locale);
+        const nextLocale = LOCALE_ORDER[(idx === -1 ? 0 : idx + 1) % LOCALE_ORDER.length];
+        setLocale(nextLocale);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [locale, setLocale, toggleTheme]);
 
   const toggleFavorite = useCallback((slug: string) => {
     setFavorites((prev) => {

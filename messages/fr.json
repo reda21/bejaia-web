@@ -17,7 +17,12 @@
     "contact": "Contact",
     "favorites": "Carnet",
     "search": "Rechercher",
-    "menu": "Menu"
+    "menu": "Menu",
+    "skipToContent": "Aller au contenu principal",
+    "cycleLanguageHint": "Changer de langue",
+    "announcementLanguage": "Langue active :",
+    "announcementThemeLight": "Mode clair activé",
+    "announcementThemeDark": "Mode sombre activé"
   },
   "hero": {
     "kicker": "Wilaya de Béjaïa · Algérie · Méditerranée",

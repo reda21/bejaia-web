@@ -11,6 +11,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
+import { NavActionTooltip } from '@/components/layout/NavActionTooltip';
 import { DESTINATIONS } from '@/data/destinations';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -125,22 +126,35 @@ export function PWAInstallButton({
   };
 
   if (deferredPrompt) {
+    if (headerMinimal) {
+      return (
+        <div className="relative inline-flex items-center">
+          <button
+            type="button"
+            onClick={handleInstall}
+            aria-label={t('pwa.installApp')}
+            aria-describedby="tooltip-nav-pwa"
+            className="peer nav-action-button"
+          >
+            <Download className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+          </button>
+          <NavActionTooltip id="tooltip-nav-pwa" label={t('pwa.installApp')} />
+        </div>
+      );
+    }
+
     return (
       <button
         type="button"
         onClick={handleInstall}
         aria-label={t('pwa.installApp')}
         title={t('pwa.installApp')}
-        className={
-          headerMinimal
-            ? 'group inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0'
-            : `inline-flex items-center gap-1.5 rounded-md border border-[#087E9B]/30 bg-[#FAF8F3] hover:bg-[#087E9B] text-[#103B50] hover:text-white transition-colors whitespace-nowrap shrink-0 ${
-                compact ? 'px-2.5 py-1.5 text-xs font-medium' : 'px-3 py-1.5 text-xs font-medium'
-              }`
-        }
+        className={`inline-flex items-center gap-1.5 rounded-md border border-[#087E9B]/30 bg-[#FAF8F3] hover:bg-[#087E9B] text-[#103B50] hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+          compact ? 'px-2.5 py-1.5 text-xs font-medium' : 'px-3 py-1.5 text-xs font-medium'
+        }`}
       >
         <Download className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-        {!headerMinimal && <span>{t('pwa.installApp')}</span>}
+        <span>{t('pwa.installApp')}</span>
       </button>
     );
   }
@@ -148,20 +162,26 @@ export function PWAInstallButton({
   if (isIOS) {
     return (
       <>
-        <button
-          type="button"
-          onClick={() => setShowIOSGuide(true)}
-          aria-label={t('pwa.installIOS')}
-          title={t('pwa.installIOS')}
-          className={
-            headerMinimal
-              ? 'inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0'
-              : 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#103B50]/20 bg-[#FAF8F3] text-xs font-medium text-[#103B50] hover:bg-[#F4EFE5] transition-colors whitespace-nowrap shrink-0'
-          }
-        >
-          <Smartphone className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-          {!headerMinimal && <span>{t('pwa.installIOS')}</span>}
-        </button>
+        <div className={headerMinimal ? 'relative inline-flex items-center' : 'inline-flex'}>
+          <button
+            type="button"
+            onClick={() => setShowIOSGuide(true)}
+            aria-label={t('pwa.installIOS')}
+            aria-describedby={headerMinimal ? 'tooltip-nav-pwa-ios' : undefined}
+            title={headerMinimal ? undefined : t('pwa.installIOS')}
+            className={
+              headerMinimal
+                ? 'peer nav-action-button'
+                : 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#103B50]/20 bg-[#FAF8F3] text-xs font-medium text-[#103B50] hover:bg-[#F4EFE5] transition-colors whitespace-nowrap shrink-0'
+            }
+          >
+            <Smartphone className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+            {!headerMinimal && <span>{t('pwa.installIOS')}</span>}
+          </button>
+          {headerMinimal && (
+            <NavActionTooltip id="tooltip-nav-pwa-ios" label={t('pwa.installIOS')} />
+          )}
+        </div>
 
         {showIOSGuide && (
           <div
