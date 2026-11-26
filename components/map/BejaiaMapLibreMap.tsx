@@ -37,6 +37,46 @@ interface RouteGeoJsonGeometry {
 
 // In-memory session cache shared across page navigations
 const sessionPlaceCache: Record<string, ResolvedMapLocation> = {};
+const patchedStyleCache: Record<string, maplibregl.StyleSpecification> = {};
+
+function patchNumericFilterExpression(expr: unknown): unknown {
+  if (!Array.isArray(expr)) return expr;
+  if (
+    (expr[0] === '<=' || expr[0] === '<' || expr[0] === '>=' || expr[0] === '>') &&
+    Array.isArray(expr[1]) &&
+    expr[1][0] === 'get' &&
+    expr[1][1] === 'ref_length'
+  ) {
+    return ['all', ['==', ['typeof', expr[1]], 'number'], expr];
+  }
+  return expr.map(patchNumericFilterExpression);
+}
+
+async function loadPatchedOpenFreeMapStyle(
+  url: string
+): Promise<maplibregl.StyleSpecification | string> {
+  if (patchedStyleCache[url]) return patchedStyleCache[url];
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return url;
+    const style = (await res.json()) as maplibregl.StyleSpecification;
+    if (Array.isArray(style.layers)) {
+      style.layers = style.layers.map((layer) => {
+        if ('filter' in layer && layer.filter) {
+          return {
+            ...layer,
+            filter: patchNumericFilterExpression(layer.filter) as maplibregl.FilterSpecification,
+          };
+        }
+        return layer;
+      });
+    }
+    patchedStyleCache[url] = style;
+    return style;
+  } catch {
+    return url;
+  }
+}
 
 const ROUTE_SOURCE_ID = 'bejaia-circuit-route-source';
 const ROUTE_CASING_LAYER_ID = 'bejaia-circuit-route-casing';
@@ -193,50 +233,58 @@ export function BejaiaMapLibreMap({
   // Initialize MapLibre GL map with OpenFreeMap vector tiles
   useEffect(() => {
     if (!isOnline || !containerRef.current) return;
+    let cancelled = false;
+    let map: maplibregl.Map | null = null;
 
     maplibregl.setWorkerUrl(new URL('/maplibre-gl-worker.js', window.location.origin).href);
 
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: OPENFREEMAP_STYLES[0].url,
-      center: BEJAIA_VIEWPORT_CENTER,
-      zoom: initialZoomRef.current,
-      attributionControl: { compact: true },
+    void loadPatchedOpenFreeMapStyle(OPENFREEMAP_STYLES[0].url).then((initialStyle) => {
+      if (cancelled || !containerRef.current) return;
+
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: initialStyle,
+        center: BEJAIA_VIEWPORT_CENTER,
+        zoom: initialZoomRef.current,
+        attributionControl: { compact: true },
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+      map.addControl(new maplibregl.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-right');
+
+      map.on('load', () => {
+        setMapReady(true);
+      });
+
+      map.on('style.load', () => {
+        if (map && routeGeometryRef.current) {
+          drawRouteOnMap(map, routeGeometryRef.current);
+        }
+      });
+
+      mapRef.current = map;
     });
-
-    map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
-    map.addControl(new maplibregl.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-right');
-
-    map.on('load', () => {
-      setMapReady(true);
-    });
-
-    map.on('style.load', () => {
-      if (routeGeometryRef.current) {
-        drawRouteOnMap(map, routeGeometryRef.current);
-      }
-    });
-
-    mapRef.current = map;
 
     return () => {
+      cancelled = true;
       Object.values(markersRef.current).forEach((m) => m.remove());
       markersRef.current = {};
       userMarkerRef.current?.remove();
       userMarkerRef.current = null;
-      map.remove();
+      map?.remove();
       mapRef.current = null;
       setMapReady(false);
     };
   }, [isOnline, drawRouteOnMap]);
 
   // Switch OpenFreeMap style cleanly
-  const handleStyleSwitch = (nextStyleId: OpenFreeMapStyleId) => {
+  const handleStyleSwitch = async (nextStyleId: OpenFreeMapStyleId) => {
     if (nextStyleId === styleId) return;
     setStyleId(nextStyleId);
     const chosen = OPENFREEMAP_STYLES.find((s) => s.id === nextStyleId);
     if (chosen && mapRef.current) {
-      mapRef.current.setStyle(chosen.url);
+      const patchedStyle = await loadPatchedOpenFreeMapStyle(chosen.url);
+      mapRef.current?.setStyle(patchedStyle);
     }
   };
 

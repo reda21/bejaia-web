@@ -460,10 +460,10 @@ export function SiteHeader() {
         {/* GPU-composited hairline scroll progress indicator */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] overflow-hidden"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] overflow-hidden"
         >
           <div
-            className="h-full w-full bg-[#087E9B] origin-start transition-transform duration-75"
+            className="h-full w-full bg-[#C47B55] origin-start transition-transform duration-75"
             style={{ transform: `scaleX(${scrollProgress})` }}
           />
         </div>

@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useRouter } from 'next/navigation';
 import { translate, getLocalizedText, isRtlLocale } from '@/lib/i18n';
 import type {
   CustomCircuit,
@@ -20,6 +21,7 @@ import type {
   ThemePreference,
 } from '@/types';
 import { OfflineIndicator, ServiceWorkerRegistrar } from '@/components/pwa/PWAControls';
+import { KeyboardShortcutsModal } from '@/components/ui/KeyboardShortcutsModal';
 
 interface AppContextValue {
   locale: Locale;
@@ -76,6 +78,7 @@ const DEFAULT_READER_PREFS: ReaderPreferences = {
 };
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [locale, setLocaleState] = useState<Locale>('fr');
   const [theme, setThemeState] = useState<ThemePreference>('system');
   const [systemDark, setSystemDark] = useState(false);
@@ -83,6 +86,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [favoritesOpen, setFavoritesOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [itineraryOpen, setItineraryOpen] = useState(false);
+  const [shortcutsHelpOpen, setShortcutsHelpOpen] = useState(false);
   const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
   const [notes, setNotes] = useState<Record<string, DestinationJournalNote>>({});
   const [readerPrefs, setReaderPrefsState] = useState<ReaderPreferences>(DEFAULT_READER_PREFS);
@@ -261,7 +265,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     });
   }, [systemDark]);
 
-  // Global keyboard shortcuts: Cmd/Ctrl+K (Search), Alt+I (Itinerary), Alt+F (Favorites), Alt+T (Theme), Alt+L (Language)
+  // Global keyboard shortcuts:
+  // - Cmd/Ctrl+K or 's' (Search), 'f' or Alt+F (Favorites), 'm' (Map), 'i' or Alt+I (Itinerary)
+  // - Alt+T (Theme), Alt+L (Language), Shift+? (Shortcuts help modal)
   useEffect(() => {
     const LOCALE_ORDER: Locale[] = ['fr', 'ar', 'kab'];
 
@@ -281,7 +287,38 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      if (isEditable || !e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (isEditable) return;
+
+      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+          e.preventDefault();
+          setShortcutsHelpOpen((prev) => !prev);
+          return;
+        }
+
+        if (!e.shiftKey) {
+          const singleKey = e.key.toLowerCase();
+          if (singleKey === 'f') {
+            e.preventDefault();
+            setFavoritesOpen((prev) => !prev);
+            return;
+          } else if (singleKey === 's') {
+            e.preventDefault();
+            setSearchOpen((prev) => !prev);
+            return;
+          } else if (singleKey === 'm') {
+            e.preventDefault();
+            router.push('/carte');
+            return;
+          } else if (singleKey === 'i') {
+            e.preventDefault();
+            setItineraryOpen((prev) => !prev);
+            return;
+          }
+        }
+      }
+
+      if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
 
       const key = e.key.toLowerCase();
       if (key === 'i') {
@@ -303,7 +340,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [locale, setLocale, toggleTheme]);
+  }, [locale, router, setLocale, toggleTheme]);
 
   const toggleFavorite = useCallback((slug: string) => {
     setFavorites((prev) => {
@@ -597,6 +634,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       <ServiceWorkerRegistrar />
       {children}
       <OfflineIndicator />
+      <KeyboardShortcutsModal
+        open={shortcutsHelpOpen}
+        onClose={() => setShortcutsHelpOpen(false)}
+        locale={locale}
+      />
     </AppContext.Provider>
   );
 }
