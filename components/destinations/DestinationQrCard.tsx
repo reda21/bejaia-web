@@ -135,7 +135,7 @@ export function DestinationQrCard({
             alt={`QR Code — ${title}`}
             width={176}
             height={176}
-            className="w-44 h-44 rounded bg-white p-1.5 border border-[#103B50]/10"
+            className="qr-surface preserve-light w-44 h-44 rounded bg-white p-2 border border-[#103B50]/10"
           />
         ) : (
           <div className="w-44 h-44 rounded bg-white border border-[#103B50]/10 flex items-center justify-center text-xs text-[#51636D]">

@@ -16,6 +16,7 @@ import {
 import { useApp } from '@/components/providers/AppProviders';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { OsmPlacesPanel } from '@/components/map/OsmPlacesPanel';
+import { CurrencyConverter } from '@/components/guide/CurrencyConverter';
 
 export function GuidePratiqueClient() {
   const { locale, t } = useApp();
@@ -131,7 +132,12 @@ export function GuidePratiqueClient() {
           </div>
         </section>
 
-        {/* 2. Régions et communes touristiques */}
+        {/* 2. Convertisseur de devises en temps réel */}
+        <section id="convertisseur" className="scroll-mt-24 pt-10 border-t border-[#103B50]/10">
+          <CurrencyConverter />
+        </section>
+
+        {/* 3. Régions et communes touristiques */}
         <section className="space-y-6 pt-10 border-t border-[#103B50]/10">
           <h2 className="font-serif text-3xl font-semibold text-[#103B50]">
             {isAr ? 'المناطق والبلديات السياحية' : 'Régions et communes touristiques'}

@@ -112,6 +112,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
   };
 
+  const themeInitScript = `(function(){try{var t=localStorage.getItem('bejaia_explorer_theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.style.colorScheme=d?'dark':'light';}catch(e){}})();`;
+
   return (
     <html
       lang="fr"
@@ -119,7 +121,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-white text-[#102530] antialiased selection:bg-[#087E9B]/20 selection:text-[#103B50]">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="min-h-screen flex flex-col bg-(--surface-page) text-(--ink-primary) antialiased selection:bg-[#087E9B]/20 selection:text-[#103B50] dark:selection:bg-[#38B2CE]/30 dark:selection:text-[#F4EFE5]">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

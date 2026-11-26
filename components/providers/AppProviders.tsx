@@ -9,6 +9,7 @@ import type {
   Locale,
   LocalizedText,
   ReaderPreferences,
+  ThemePreference,
 } from '@/types';
 import { OfflineIndicator, ServiceWorkerRegistrar } from '@/components/pwa/PWAControls';
 
@@ -16,11 +17,15 @@ interface AppContextValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   isRtl: boolean;
+  theme: ThemePreference;
+  resolvedTheme: 'light' | 'dark';
+  setTheme: (theme: ThemePreference) => void;
+  toggleTheme: () => void;
   t: (keyPath: string) => string;
   lt: (text: LocalizedText | undefined) => string;
   favorites: string[];
-  toggleFavorite: (slug: string) => void;
-  isFavorite: (slug: string) => boolean;
+  toggleFavorite: (id: string) => void;
+  isFavorite: (id: string) => boolean;
   favoritesOpen: boolean;
   setFavoritesOpen: (open: boolean) => void;
   searchOpen: boolean;
@@ -48,6 +53,7 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | null>(null);
 
 const STORAGE_LOCALE = 'bejaia_explorer_locale';
+const STORAGE_THEME = 'bejaia_explorer_theme';
 const STORAGE_FAVORITES = 'bejaia_explorer_favorites';
 const STORAGE_VISITED = 'bejaia_explorer_visited';
 const STORAGE_NOTES = 'bejaia_explorer_field_notes';
@@ -62,6 +68,8 @@ const DEFAULT_READER_PREFS: ReaderPreferences = {
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('fr');
+  const [theme, setThemeState] = useState<ThemePreference>('system');
+  const [systemDark, setSystemDark] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -75,9 +83,20 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let active = true;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      if (active) setSystemDark(e.matches);
+    };
+    mq.addEventListener('change', handleMediaChange);
+
     queueMicrotask(() => {
       if (!active) return;
+      setSystemDark(mq.matches);
       try {
+        const savedTheme = localStorage.getItem(STORAGE_THEME) as ThemePreference | null;
+        if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
+          setThemeState(savedTheme);
+        }
         const savedLocale = localStorage.getItem(STORAGE_LOCALE) as Locale | null;
         if (savedLocale === 'fr' || savedLocale === 'ar' || savedLocale === 'kab') {
           setLocaleState(savedLocale);
@@ -127,10 +146,49 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       }
       setHydrated(true);
     });
+
+    const handleStorage = (e: StorageEvent) => {
+      if (!active) return;
+      if (e.key === STORAGE_FAVORITES && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) setFavorites(parsed);
+        } catch {
+          // ignore
+        }
+      }
+      if (e.key === STORAGE_THEME) {
+        const v = e.newValue as ThemePreference | null;
+        if (v === 'light' || v === 'dark' || v === 'system') setThemeState(v);
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
     return () => {
       active = false;
+      mq.removeEventListener('change', handleMediaChange);
+      window.removeEventListener('storage', handleStorage);
     };
   }, []);
+
+  const resolvedTheme: 'light' | 'dark' =
+    theme === 'system' ? (systemDark ? 'dark' : 'light') : theme;
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const isDark = resolvedTheme === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', isDark ? '#0B1922' : '#103B50');
+    }
+    try {
+      localStorage.setItem(STORAGE_THEME, theme);
+    } catch {
+      // Ignore storage write errors
+    }
+  }, [theme, resolvedTheme, hydrated]);
 
   useEffect(() => {
     const rtl = isRtlLocale(locale);
@@ -160,6 +218,17 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
   }, []);
+
+  const setTheme = useCallback((next: ThemePreference) => {
+    setThemeState(next);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setThemeState((prev) => {
+      const currentlyDark = prev === 'dark' || (prev === 'system' && systemDark);
+      return currentlyDark ? 'light' : 'dark';
+    });
+  }, [systemDark]);
 
   const toggleFavorite = useCallback((slug: string) => {
     setFavorites((prev) => {
@@ -382,6 +451,10 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       locale,
       setLocale,
       isRtl: isRtlLocale(locale),
+      theme,
+      resolvedTheme,
+      setTheme,
+      toggleTheme,
       t: (keyPath: string) => translate(locale, keyPath),
       lt: (text: LocalizedText | undefined) => getLocalizedText(text, locale),
       favorites,
@@ -413,6 +486,10 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [
       locale,
       setLocale,
+      theme,
+      resolvedTheme,
+      setTheme,
+      toggleTheme,
       favorites,
       toggleFavorite,
       isFavorite,

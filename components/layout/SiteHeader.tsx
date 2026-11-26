@@ -15,13 +15,16 @@ import {
   Upload,
   NotebookPen,
   Route,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
 import { DESTINATIONS, getDestinationBySlug } from '@/data/destinations';
 import { GlobalSearchModal } from '@/components/ui/GlobalSearchModal';
 import { ItineraryModal } from '@/components/circuits/ItineraryModal';
 import { PWAInstallButton, OfflinePackButton } from '@/components/pwa/PWAControls';
-import type { Locale } from '@/types';
+import type { Locale, ThemePreference } from '@/types';
 
 const LOCALES: { code: Locale; label: string; title: string }[] = [
   { code: 'fr', label: 'FR', title: 'Français' },
@@ -34,6 +37,10 @@ export function SiteHeader() {
   const {
     locale,
     setLocale,
+    theme,
+    resolvedTheme,
+    setTheme,
+    toggleTheme,
     t,
     lt,
     favorites,
@@ -67,7 +74,9 @@ export function SiteHeader() {
     { href: '/guide-pratique', label: t('nav.guide') },
   ];
 
-  const favoriteDestinations = DESTINATIONS.filter((d) => favorites.includes(d.slug));
+  const favoriteDestinations = DESTINATIONS.filter(
+    (d) => favorites.includes(d.id) || favorites.includes(d.slug)
+  );
   const visitedDestinations = DESTINATIONS.filter((d) => visitedSlugs.includes(d.slug));
   const notedEntries = Object.entries(notes)
     .map(([slug, entry]) => ({ dest: getDestinationBySlug(slug), slug, entry }))
@@ -176,6 +185,22 @@ export function SiteHeader() {
 
             <button
               type="button"
+              onClick={toggleTheme}
+              aria-label={
+                resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
+              }
+              aria-pressed={resolvedTheme === 'dark'}
+              title={
+                resolvedTheme === 'dark' ? t('theme.toggleToLight') : t('theme.toggleToDark')
+              }
+              className="inline-flex items-center justify-center w-9 h-9 rounded-md border border-[#103B50]/12 bg-[#FAF8F3] hover:bg-[#F4EFE5] text-[#103B50] transition-colors shrink-0"
+            >
+              <Moon className="w-4 h-4 text-[#087E9B] dark:hidden" />
+              <Sun className="w-4 h-4 hidden dark:block text-[#E29A74]" />
+            </button>
+
+            <button
+              type="button"
               onClick={() => setItineraryOpen(true)}
               aria-label={t('itinerary.buttonLabel')}
               title={t('itinerary.buttonLabel')}
@@ -244,24 +269,57 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <div className="pt-3 mt-2 border-t border-[#103B50]/10 flex flex-wrap items-center justify-between gap-4 px-3">
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/a-propos"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-xs text-[#51636D] hover:text-[#087E9B]"
+            <div className="pt-3 mt-2 border-t border-[#103B50]/10 space-y-3 px-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-medium text-[#51636D]">{t('theme.label')}</span>
+                <div
+                  role="group"
+                  aria-label={t('theme.label')}
+                  className="inline-flex items-center bg-[#F4EFE5] p-0.5 rounded-md"
                 >
-                  {t('nav.about')}
-                </Link>
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-xs text-[#51636D] hover:text-[#087E9B]"
-                >
-                  {t('nav.contact')}
-                </Link>
+                  {(
+                    [
+                      { key: 'system', label: t('theme.system'), Icon: Monitor },
+                      { key: 'light', label: t('theme.light'), Icon: Sun },
+                      { key: 'dark', label: t('theme.dark'), Icon: Moon },
+                    ] as { key: ThemePreference; label: string; Icon: typeof Sun }[]
+                  ).map(({ key, label, Icon }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setTheme(key)}
+                      className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition-colors ${
+                        theme === key
+                          ? 'bg-[#103B50] text-white'
+                          : 'text-[#103B50]/75 hover:text-[#103B50]'
+                      }`}
+                    >
+                      <Icon className="w-3 h-3" />
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <PWAInstallButton compact />
+
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/a-propos"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xs text-[#51636D] hover:text-[#087E9B]"
+                  >
+                    {t('nav.about')}
+                  </Link>
+                  <Link
+                    href="/contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xs text-[#51636D] hover:text-[#087E9B]"
+                  >
+                    {t('nav.contact')}
+                  </Link>
+                </div>
+                <PWAInstallButton compact />
+              </div>
             </div>
           </div>
         )}

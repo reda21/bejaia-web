@@ -18,7 +18,7 @@ export function DestinationCard({ destination }: { destination: Destination }) {
     customCircuitSlugs,
     toggleCustomCircuitSlug,
   } = useApp();
-  const favored = isFavorite(destination.slug);
+  const favored = isFavorite(destination.id);
   const visited = isVisited(destination.slug);
   const inItinerary = customCircuitSlugs.includes(destination.slug);
   const category = CATEGORY_MAP[destination.category];
@@ -37,7 +37,7 @@ export function DestinationCard({ destination }: { destination: Destination }) {
         </Link>
         <button
           type="button"
-          onClick={() => toggleFavorite(destination.slug)}
+          onClick={() => toggleFavorite(destination.id)}
           aria-label={favored ? t('destinations.removeFavorite') : t('destinations.addFavorite')}
           aria-pressed={favored}
           className={`absolute top-3 end-3 w-10 h-10 rounded-md flex items-center justify-center backdrop-blur-sm transition-colors ${

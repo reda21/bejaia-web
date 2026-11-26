@@ -74,6 +74,8 @@
     "resetFilters": "Réinitialiser les filtres",
     "addFavorite": "Ajouter aux favoris",
     "removeFavorite": "Retirer des favoris",
+    "savedOfflineHint": "Enregistré localement pour un accès rapide hors ligne",
+    "openFavoritesQuick": "Voir mes favoris",
     "markVisited": "Marquer comme visité",
     "visitedBadge": "Visité"
   },
@@ -226,13 +228,37 @@
     "locationLabel": "Béjaïa · Littoral & Gouraya (36.75°N, 5.06°E)",
     "feelsLike": "Ressenti",
     "wind": "Vent",
+    "gusts": "Rafales",
     "humidity": "Humidité",
     "forecastTitle": "Prévisions sur 3 jours",
     "precipChance": "Pluie",
     "refresh": "Actualiser",
     "loading": "Chargement des données météo en direct...",
     "error": "Météo en direct indisponible hors-ligne ou service momentanément injoignable.",
-    "sourceNote": "Données météorologiques en direct via Open-Meteo"
+    "sourceNote": "Données météorologiques en direct (littoral & massif de l'Akfadou) via Open-Meteo",
+    "alertsTitle": "Alertes météo automatiques",
+    "alertSevere": "Alerte extrême",
+    "alertAdvisory": "Vigilance météo",
+    "noAlerts": "Vigilance météo normale : aucune tempête côtière ni épisode neigeux extrême détecté sur le littoral ou les reliefs.",
+    "mountainLabel": "Reliefs · Akfadou"
+  },
+  "currency": {
+    "kicker": "Outil voyageur · Taux officiels en direct",
+    "title": "Convertisseur de devises (DZD)",
+    "subtitle": "Convertissez instantanément un montant en dinars algériens (DZD) vers les principales devises étrangères ou inversement.",
+    "amountLabel": "Montant à convertir",
+    "fromLabel": "Devise source",
+    "toLabel": "Devise cible",
+    "swap": "Inverser les devises",
+    "quickAmounts": "Montants rapides",
+    "multiTitle": "Équivalents instantanés",
+    "rateLabel": "Taux de change officiel",
+    "updatedLabel": "Mise à jour",
+    "refresh": "Actualiser les taux",
+    "loading": "Chargement des taux de change en direct...",
+    "error": "Taux de change en direct momentanément indisponibles.",
+    "offlineCached": "Derniers taux en direct enregistrés localement (mode hors-ligne)",
+    "disclaimer": "Taux indicatifs officiels issus des marchés interbancaires (ExchangeRate-API). Les frais et marges des banques ou bureaux de change locaux peuvent varier."
   },
   "itinerary": {
     "buttonLabel": "Mon Itinéraire",
@@ -264,6 +290,15 @@
     "zoomOut": "Réinitialiser le zoom",
     "fullscreen": "Plein écran",
     "exitFullscreen": "Quitter plein écran"
+  },
+  "theme": {
+    "toggleLabel": "Basculer le thème clair / sombre",
+    "label": "Apparence",
+    "system": "Système",
+    "light": "Clair",
+    "dark": "Sombre",
+    "toggleToDark": "Activer le mode sombre",
+    "toggleToLight": "Activer le mode clair"
   },
   "guide": {
     "pageTitle": "Guide pratique du voyageur",

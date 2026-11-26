@@ -1,14 +1,46 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --surface-page: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-soft: #FAF8F3;
+  --surface-sand: #F4EFE5;
+  --ink-primary: #102530;
+  --ink-heading: #103B50;
+  --ink-muted: #51636D;
+  --accent-med: #087E9B;
+  --accent-forest: #356B50;
+  --accent-terracotta: #C47B55;
+  --border-subtle: rgba(16, 59, 80, 0.12);
+  --border-strong: rgba(16, 59, 80, 0.22);
+}
+
+:root.dark {
+  --surface-page: #0B1720;
+  --surface-card: #10222E;
+  --surface-soft: #132633;
+  --surface-sand: #183040;
+  --ink-primary: #EDF3F7;
+  --ink-heading: #E6F0F5;
+  --ink-muted: #A7BAC6;
+  --accent-med: #3AB8D6;
+  --accent-forest: #62B88C;
+  --accent-terracotta: #E29A74;
+  --border-subtle: rgba(230, 240, 245, 0.14);
+  --border-strong: rgba(230, 240, 245, 0.24);
+}
+
 @theme inline {
-  --color-med-blue: #087E9B;
-  --color-deep-blue: #103B50;
-  --color-forest: #356B50;
-  --color-sand: #F4EFE5;
-  --color-sand-soft: #FAF8F3;
-  --color-terracotta: #C47B55;
-  --color-ink: #102530;
-  --color-muted: #51636D;
+  --color-med-blue: var(--accent-med);
+  --color-deep-blue: var(--ink-heading);
+  --color-forest: var(--accent-forest);
+  --color-sand: var(--surface-sand);
+  --color-sand-soft: var(--surface-soft);
+  --color-terracotta: var(--accent-terracotta);
+  --color-ink: var(--ink-primary);
+  --color-muted: var(--ink-muted);
 
   --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
@@ -18,8 +50,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #FFFFFF;
-    color: #102530;
+    background-color: var(--surface-page);
+    color: var(--ink-primary);
+  }
+
+  body {
+    background-color: var(--surface-page);
+    color: var(--ink-primary);
+    transition: background-color 180ms ease, color 180ms ease;
   }
 
   html[dir="rtl"] body {
@@ -39,9 +77,103 @@
   input:focus-visible,
   select:focus-visible,
   textarea:focus-visible {
-    outline: 2px solid #087E9B;
+    outline: 2px solid var(--accent-med);
     outline-offset: 2px;
   }
+}
+
+/* Semantic Dark Mode adaptation powered by Tailwind CSS variables */
+html.dark .bg-white {
+  background-color: var(--surface-card) !important;
+}
+
+html.dark .bg-white\/95 {
+  background-color: rgba(16, 34, 46, 0.94) !important;
+}
+
+html.dark .bg-white\/90 {
+  background-color: rgba(16, 34, 46, 0.9) !important;
+}
+
+html.dark .bg-\[\#FAF8F3\] {
+  background-color: var(--surface-soft) !important;
+}
+
+html.dark .bg-\[\#F4EFE5\] {
+  background-color: var(--surface-sand) !important;
+}
+
+html.dark .hover\:bg-\[\#FAF8F3\]:hover {
+  background-color: var(--surface-soft) !important;
+}
+
+html.dark .hover\:bg-\[\#F4EFE5\]:hover {
+  background-color: var(--surface-sand) !important;
+}
+
+html.dark .hover\:bg-white:hover {
+  background-color: var(--surface-sand) !important;
+}
+
+html.dark .text-\[\#103B50\],
+html.dark .text-\[\#102530\] {
+  color: var(--ink-heading) !important;
+}
+
+html.dark .text-\[\#103B50\]\/85,
+html.dark .text-\[\#103B50\]\/80,
+html.dark .text-\[\#103B50\]\/75,
+html.dark .text-\[\#102530\]\/90,
+html.dark .text-\[\#102530\]\/85 {
+  color: rgba(237, 243, 247, 0.88) !important;
+}
+
+html.dark .text-\[\#51636D\] {
+  color: var(--ink-muted) !important;
+}
+
+html.dark .text-\[\#087E9B\] {
+  color: var(--accent-med) !important;
+}
+
+html.dark .text-\[\#356B50\] {
+  color: var(--accent-forest) !important;
+}
+
+html.dark .text-\[\#C47B55\] {
+  color: var(--accent-terracotta) !important;
+}
+
+html.dark .hover\:text-\[\#103B50\]:hover {
+  color: #FFFFFF !important;
+}
+
+html.dark .hover\:text-\[\#087E9B\]:hover {
+  color: var(--accent-med) !important;
+}
+
+html.dark .border-\[\#103B50\]\/10,
+html.dark .border-\[\#103B50\]\/12,
+html.dark .border-\[\#103B50\]\/15 {
+  border-color: var(--border-subtle) !important;
+}
+
+html.dark .border-\[\#103B50\]\/20 {
+  border-color: var(--border-strong) !important;
+}
+
+/* Preserve pure white quiet zone behind scannable QR codes in Dark Mode */
+html.dark .qr-surface,
+html.dark .qr-surface img {
+  background-color: #FFFFFF !important;
+  color: #103B50 !important;
+}
+
+/* Improve select/input legibility in dark mode */
+html.dark select,
+html.dark input,
+html.dark textarea {
+  color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -64,7 +196,7 @@
   float: inline-start;
   margin-inline-end: 0.65rem;
   margin-top: 0.25rem;
-  color: #103B50;
+  color: var(--ink-heading);
 }
 
 /* Print-ready A4 Field Dossier Styling */
@@ -78,10 +210,24 @@
   }
 
   html,
+  html.dark,
   body {
     background: #FFFFFF !important;
     color: #102530 !important;
     font-size: 11pt !important;
+    color-scheme: light !important;
+  }
+
+  html.dark .bg-white,
+  html.dark .bg-\[\#FAF8F3\],
+  html.dark .bg-\[\#F4EFE5\] {
+    background-color: #FFFFFF !important;
+  }
+
+  html.dark .text-\[\#103B50\],
+  html.dark .text-\[\#102530\],
+  html.dark .text-\[\#51636D\] {
+    color: #102530 !important;
   }
 
   main {
@@ -98,4 +244,3 @@
     break-inside: avoid-page;
   }
 }
-

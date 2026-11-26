@@ -43,8 +43,10 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
     locale,
     t,
     lt,
+    favorites,
     isFavorite,
     toggleFavorite,
+    setFavoritesOpen,
     isVisited,
     toggleVisited,
     notes,
@@ -62,7 +64,7 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
   const [resolvedLoc, setResolvedLoc] = useState<ResolvedMapLocation | null>(null);
 
   const category = CATEGORY_MAP[destination.category];
-  const favored = isFavorite(destination.slug);
+  const favored = isFavorite(destination.id);
   const visited = isVisited(destination.slug);
   const inCircuit = customCircuitSlugs.includes(destination.slug);
   const proseSizeClass = getProseSizeClass(readerPrefs.fontScale);
@@ -180,7 +182,8 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
               <div className="no-print flex flex-wrap items-center gap-2.5 pt-2">
                 <button
                   type="button"
-                  onClick={() => toggleFavorite(destination.slug)}
+                  onClick={() => toggleFavorite(destination.id)}
+                  aria-pressed={favored}
                   className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium border transition-colors ${
                     favored
                       ? 'bg-[#C47B55] border-[#C47B55] text-white'
@@ -235,6 +238,22 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
+
+              {favored && (
+                <div className="no-print flex flex-wrap items-center justify-between gap-2 px-3.5 py-2 bg-[#C47B55]/10 border border-[#C47B55]/30 rounded-md text-xs text-[#103B50]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 text-[#C47B55] fill-current shrink-0" />
+                    <span>{t('destinations.savedOfflineHint')}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setFavoritesOpen(true)}
+                    className="font-semibold text-[#087E9B] hover:underline whitespace-nowrap"
+                  >
+                    {t('destinations.openFavoritesQuick')} ({favorites.length})
+                  </button>
+                </div>
+              )}
 
               <div className="pt-2">
                 <EditorialControls showPrint={true} />
@@ -507,6 +526,34 @@ export function DestinationDetailClient({ destination }: { destination: Destinat
           {!readerPrefs.readerMode && (
             <aside className="lg:col-span-4 space-y-6">
               <div className="lg:sticky lg:top-20 space-y-6">
+                <div className="no-print bg-white border border-[#103B50]/12 rounded-lg p-4 space-y-2.5">
+                  <button
+                    type="button"
+                    onClick={() => toggleFavorite(destination.id)}
+                    aria-pressed={favored}
+                    className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-xs sm:text-sm font-medium border transition-colors ${
+                      favored
+                        ? 'bg-[#C47B55] border-[#C47B55] text-white'
+                        : 'bg-[#FAF8F3] border-[#103B50]/15 text-[#103B50] hover:bg-[#F4EFE5]'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${favored ? 'fill-current' : ''}`} />
+                    <span>
+                      {favored ? t('destinations.removeFavorite') : t('destinations.addFavorite')}
+                    </span>
+                  </button>
+                  <div className="flex items-center justify-between gap-2 text-[11px] text-[#51636D]">
+                    <span>{t('destinations.savedOfflineHint')}</span>
+                    <button
+                      type="button"
+                      onClick={() => setFavoritesOpen(true)}
+                      className="font-medium text-[#087E9B] hover:underline shrink-0 tabular-nums"
+                    >
+                      {t('destinations.openFavoritesQuick')} ({favorites.length})
+                    </button>
+                  </div>
+                </div>
+
                 <ChapterToc title={t('detail.tocTitle')} items={tocItems} />
 
                 <DestinationQrCard

@@ -1,4 +1,5 @@
 export type Locale = 'fr' | 'ar' | 'kab';
+export type ThemePreference = 'system' | 'light' | 'dark';
 
 export interface LocalizedText {
   fr: string;
@@ -252,6 +253,34 @@ export interface WeatherForecastDay {
   tempMax: number;
   tempMin: number;
   precipitationProbability: number | null;
+  windGustsMax?: number | null;
+  precipitationSum?: number | null;
+  snowfallSum?: number | null;
+}
+
+export type WeatherAlertType =
+  | 'coastal_storm'
+  | 'mountain_snow'
+  | 'heavy_rain'
+  | 'heatwave';
+
+export interface WeatherAlert {
+  id: string;
+  type: WeatherAlertType;
+  severity: 'advisory' | 'severe';
+  zone: 'coast' | 'mountain' | 'wilaya';
+  title: LocalizedText;
+  description: LocalizedText;
+  advice: LocalizedText;
+  metricLabel?: string;
+}
+
+export interface MountainWeatherSnapshot {
+  location: LocalizedText;
+  elevationLabel: string;
+  temperature: number;
+  windGusts: number;
+  weatherCode: number;
 }
 
 export interface BejaiaWeatherData {
@@ -262,11 +291,23 @@ export interface BejaiaWeatherData {
     apparentTemperature: number;
     humidity: number;
     windSpeed: number;
+    windGusts?: number;
     weatherCode: number;
     isDay: boolean;
   };
+  mountain?: MountainWeatherSnapshot;
+  alerts: WeatherAlert[];
   forecast: WeatherForecastDay[];
   source: string;
 }
+
+export interface ExchangeRatesPayload {
+  base: 'DZD';
+  updatedAtUtc: string;
+  fetchedAt: string;
+  rates: Record<string, number>;
+  source: string;
+}
+
 
 
