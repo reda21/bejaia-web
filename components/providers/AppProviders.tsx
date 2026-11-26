@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { translate, getLocalizedText, isRtlLocale } from '@/lib/i18n';
 import type {
@@ -30,8 +31,8 @@ interface AppContextValue {
   isRtl: boolean;
   theme: ThemePreference;
   resolvedTheme: 'light' | 'dark';
-  setTheme: (theme: ThemePreference) => void;
-  toggleTheme: () => void;
+  setTheme: (theme: ThemePreference, event?: React.MouseEvent | MouseEvent) => void;
+  toggleTheme: (event?: React.MouseEvent | MouseEvent) => void;
   t: (keyPath: string) => string;
   lt: (text: LocalizedText | undefined) => string;
   favorites: string[];
@@ -254,16 +255,110 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [locale]
   );
 
-  const setTheme = useCallback((next: ThemePreference) => {
-    setThemeState(next);
-  }, []);
+  const runCircularThemeTransition = useCallback(
+    (nextPref: ThemePreference, event?: React.MouseEvent | MouseEvent) => {
+      const nextIsDark =
+        nextPref === 'dark' || (nextPref === 'system' && systemDark);
+      const currentIsDark = resolvedTheme === 'dark';
 
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const currentlyDark = prev === 'dark' || (prev === 'system' && systemDark);
-      return currentlyDark ? 'light' : 'dark';
-    });
-  }, [systemDark]);
+      const doc = document as Document & {
+        startViewTransition?: (cb: () => void) => {
+          ready: Promise<void>;
+          finished: Promise<void>;
+        };
+      };
+
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (
+        !doc.startViewTransition ||
+        prefersReducedMotion ||
+        nextIsDark === currentIsDark
+      ) {
+        setThemeState(nextPref);
+        return;
+      }
+
+      let x = window.innerWidth / 2;
+      let y = window.innerHeight / 2;
+
+      if (
+        event &&
+        typeof event.clientX === 'number' &&
+        typeof event.clientY === 'number' &&
+        (event.clientX !== 0 || event.clientY !== 0)
+      ) {
+        x = event.clientX;
+        y = event.clientY;
+      } else {
+        const btn = document.querySelector<HTMLElement>(
+          '[aria-describedby="tooltip-nav-theme"]'
+        );
+        if (btn) {
+          const rect = btn.getBoundingClientRect();
+          x = rect.left + rect.width / 2;
+          y = rect.top + rect.height / 2;
+        }
+      }
+
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      document.documentElement.classList.add('theme-view-transitioning');
+
+      const transition = doc.startViewTransition(() => {
+        flushSync(() => {
+          setThemeState(nextPref);
+        });
+        document.documentElement.classList.toggle('dark', nextIsDark);
+        document.documentElement.style.colorScheme = nextIsDark ? 'dark' : 'light';
+      });
+
+      transition.ready
+        .then(() => {
+          document.documentElement.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 520,
+              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              pseudoElement: '::view-transition-new(root)',
+            }
+          );
+        })
+        .catch(() => {
+          // Ignore if view transition is skipped
+        });
+
+      transition.finished.finally(() => {
+        document.documentElement.classList.remove('theme-view-transitioning');
+      });
+    },
+    [resolvedTheme, systemDark]
+  );
+
+  const setTheme = useCallback(
+    (next: ThemePreference, event?: React.MouseEvent | MouseEvent) => {
+      runCircularThemeTransition(next, event);
+    },
+    [runCircularThemeTransition]
+  );
+
+  const toggleTheme = useCallback(
+    (event?: React.MouseEvent | MouseEvent) => {
+      const nextPref: ThemePreference = resolvedTheme === 'dark' ? 'light' : 'dark';
+      runCircularThemeTransition(nextPref, event);
+    },
+    [resolvedTheme, runCircularThemeTransition]
+  );
 
   // Global keyboard shortcuts:
   // - Cmd/Ctrl+K or 's' (Search), 'f' or Alt+F (Favorites), 'm' (Map), 'i' or Alt+I (Itinerary)

@@ -65,7 +65,7 @@ export function EditorialControls({ showPrint = true }: { showPrint?: boolean })
             <button
               key={opt.key}
               type="button"
-              onClick={() => setTheme(opt.key)}
+              onClick={(e) => setTheme(opt.key, e)}
               aria-pressed={theme === opt.key}
               className={`inline-flex items-center gap-1 px-2 py-1 rounded transition-colors ${
                 theme === opt.key

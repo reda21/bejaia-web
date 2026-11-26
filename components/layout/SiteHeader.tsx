@@ -771,7 +771,7 @@ export function SiteHeader() {
                     <button
                       key={key}
                       type="button"
-                      onClick={() => setTheme(key)}
+                      onClick={(e) => setTheme(key, e)}
                       className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition-colors ${
                         theme === key
                           ? 'bg-[#103B50] text-white'
