@@ -210,10 +210,24 @@ export function SiteHeader() {
               }
               className="group inline-flex items-center gap-1.5 px-2.5 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-xs font-medium text-[#103B50] shrink-0"
             >
-              <Route
-                className="w-3.5 h-3.5 text-[#087E9B] group-hover:text-[#103B50] dark:group-hover:text-white transition-[color,stroke] duration-150 shrink-0"
-                strokeWidth={2}
-              />
+              <span
+                className={`relative inline-flex items-center justify-center shrink-0 ${
+                  customCircuitSlugs.length > 0 ? 'lg:me-1' : ''
+                }`}
+              >
+                <Route
+                  className="w-3.5 h-3.5 text-[#087E9B] group-hover:text-[#103B50] dark:group-hover:text-white transition-[color,stroke] duration-150 shrink-0"
+                  strokeWidth={2}
+                />
+                {customCircuitSlugs.length > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
+                  >
+                    {customCircuitSlugs.length}
+                  </span>
+                )}
+              </span>
               <span className="hidden lg:inline">{t('itinerary.buttonLabel')}</span>
             </button>
 
@@ -232,7 +246,17 @@ export function SiteHeader() {
               }
               className="inline-flex items-center justify-center w-9 h-9 bg-transparent hover:bg-transparent active:bg-transparent text-[#087E9B] hover:text-[#103B50] transition-[color,stroke] duration-150 shrink-0"
             >
-              <Heart className="w-3.5 h-3.5" strokeWidth={2} />
+              <span className="relative inline-flex items-center justify-center">
+                <Heart className="w-3.5 h-3.5" strokeWidth={2} />
+                {favorites.length > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-2 -end-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#C47B55] text-white text-[10px] font-bold leading-none inline-flex items-center justify-center tabular-nums"
+                  >
+                    {favorites.length}
+                  </span>
+                )}
+              </span>
             </button>
 
             <button
