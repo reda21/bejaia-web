@@ -29,6 +29,8 @@ import {
   type ImmersiveArticleItem,
 } from '@/components/history/ImmersiveArticleReader';
 import { HistoryAiQuiz } from '@/components/history/HistoryAiQuiz';
+import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
+import { InteractiveHistoryTimeline } from '@/components/history/InteractiveHistoryTimeline';
 import { getDestinationBySlug } from '@/data/destinations';
 import {
   GLOSSARY_TERMS,
@@ -287,24 +289,13 @@ export function HistoryEncyclopediaClient() {
         {/* TAB 1: CHRONOLOGICAL TIMELINE ACROSS THE CENTURIES */}
         {activeTab === 'timeline' && (
           <div className="space-y-16">
-            {/* Horizontal Chronological Index Rail */}
+            {/* Interactive Chronological Timeline */}
             {!readerPrefs.readerMode && (
-              <div className="no-print grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pb-8 border-b border-[#103B50]/10">
-                {HISTORICAL_ERAS.map((era) => (
-                  <a
-                    key={era.id}
-                    href={`#${era.slug}`}
-                    className="p-4 bg-[#FAF8F3] hover:bg-[#F4EFE5] border border-[#103B50]/10 rounded-md transition-colors flex flex-col justify-between gap-2"
-                  >
-                    <span className="text-xs font-semibold text-[#C47B55] tabular-nums">
-                      {era.order} / {lt(era.dateRange)}
-                    </span>
-                    <span className="font-serif text-base font-semibold text-[#103B50] leading-snug">
-                      {lt(era.title)}
-                    </span>
-                  </a>
-                ))}
-              </div>
+              <InteractiveHistoryTimeline
+                onOpenImmersive={(eraIndex) =>
+                  setImmersiveSession({ collection: 'eras', index: eraIndex })
+                }
+              />
             )}
 
             {/* Era Essays */}
@@ -372,14 +363,23 @@ export function HistoryEncyclopediaClient() {
                           <p className="text-xs font-semibold uppercase tracking-widest text-[#C47B55] tabular-nums">
                             {era.order} · {lt(era.dateRange)}
                           </p>
-                          <button
-                            type="button"
-                            onClick={() => setImmersiveSession({ collection: 'eras', index: idx })}
-                            className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
-                          >
-                            <BookOpenText className="w-3.5 h-3.5" />
-                            <span>{t('historyPage.immersiveBtn')}</span>
-                          </button>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <ArticleAudioPlayer
+                              articleId={era.id}
+                              title={lt(era.title)}
+                              subtitle={lt(era.subtitle)}
+                              paragraphs={[lt(era.summary), ...era.paragraphs.map((p) => lt(p))]}
+                              compact
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setImmersiveSession({ collection: 'eras', index: idx })}
+                              className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                            >
+                              <BookOpenText className="w-3.5 h-3.5" />
+                              <span>{t('historyPage.immersiveBtn')}</span>
+                            </button>
+                          </div>
                         </div>
                         <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#103B50] leading-tight">
                           {lt(era.title)}
@@ -499,14 +499,26 @@ export function HistoryEncyclopediaClient() {
                         <span aria-hidden="true">·</span>
                         <span>{lt(fig.dates)}</span>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setImmersiveSession({ collection: 'figures', index: idx })}
-                        className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
-                      >
-                        <BookOpenText className="w-3.5 h-3.5" />
-                        <span>{t('historyPage.immersiveBtn')}</span>
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <ArticleAudioPlayer
+                          articleId={fig.id}
+                          title={lt(fig.name)}
+                          subtitle={lt(fig.domain)}
+                          paragraphs={[
+                            lt(fig.bejaiaConnection),
+                            ...fig.biography.map((p) => lt(p)),
+                          ]}
+                          compact
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setImmersiveSession({ collection: 'figures', index: idx })}
+                          className="no-print inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                        >
+                          <BookOpenText className="w-3.5 h-3.5" />
+                          <span>{t('historyPage.immersiveBtn')}</span>
+                        </button>
+                      </div>
                     </div>
 
                     <div>
@@ -573,16 +585,23 @@ export function HistoryEncyclopediaClient() {
                     <span aria-hidden="true">·</span>
                     <span className="font-medium text-[#087E9B]">{lt(layer.period)}</span>
                   </div>
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[#356B50] font-medium">
                       {layer.attestationStatus === 'attested_vestiges'
                         ? 'Vestiges attestés sur site'
                         : 'Traces archéologiques ponctuelles'}
                     </span>
+                    <ArticleAudioPlayer
+                      articleId={layer.id}
+                      title={lt(layer.title)}
+                      subtitle={lt(layer.period)}
+                      paragraphs={[lt(layer.description), lt(layer.attestationNote)]}
+                      compact
+                    />
                     <button
                       type="button"
                       onClick={() => setImmersiveSession({ collection: 'medina', index: layerIdx })}
-                      className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                      className="no-print inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
                     >
                       <BookOpenText className="w-3.5 h-3.5" />
                       <span>{t('historyPage.immersiveBtn')}</span>
@@ -742,14 +761,26 @@ export function HistoryEncyclopediaClient() {
                       <p className="text-xs font-semibold uppercase tracking-widest text-[#356B50]">
                         0{idx + 1} · {lt(dossier.ecosystemType)}
                       </p>
-                      <button
-                        type="button"
-                        onClick={() => setImmersiveSession({ collection: 'nature', index: idx })}
-                        className="no-print inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
-                      >
-                        <BookOpenText className="w-3.5 h-3.5" />
-                        <span>{t('historyPage.immersiveBtn')}</span>
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <ArticleAudioPlayer
+                          articleId={dossier.id}
+                          title={lt(dossier.title)}
+                          subtitle={lt(dossier.subtitle)}
+                          paragraphs={[
+                            lt(dossier.summary),
+                            ...dossier.sections.map((s) => `${lt(s.heading)}. ${lt(s.body)}`),
+                          ]}
+                          compact
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setImmersiveSession({ collection: 'nature', index: idx })}
+                          className="no-print inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-[#FAF8F3] hover:bg-[#103B50] text-[#103B50] hover:text-white border border-[#103B50]/15 text-xs font-medium transition-colors"
+                        >
+                          <BookOpenText className="w-3.5 h-3.5" />
+                          <span>{t('historyPage.immersiveBtn')}</span>
+                        </button>
+                      </div>
                     </div>
                     <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#103B50]">
                       {lt(dossier.title)}

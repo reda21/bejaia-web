@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '@/components/providers/AppProviders';
 import { ResilientImage } from '@/components/ui/ResilientImage';
+import { ArticleAudioPlayer } from '@/components/history/ArticleAudioPlayer';
 import { getDestinationBySlug } from '@/data/destinations';
 import type { MediaAsset, SourceCitation } from '@/types';
 
@@ -297,6 +298,15 @@ export function ImmersiveArticleReader({
           )}
 
           <div className="w-16 h-0.5 bg-[#C47B55] mx-auto pt-1" aria-hidden="true" />
+
+          <div className="pt-2 text-start">
+            <ArticleAudioPlayer
+              articleId={`immersive-${article.id}`}
+              title={article.title}
+              subtitle={article.subtitle}
+              paragraphs={[article.summary, ...article.paragraphs]}
+            />
+          </div>
         </header>
 
         {/* Cinematic Magazine Feature Plate */}
