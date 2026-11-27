@@ -1,117 +1,19 @@
 {
   "version": 2,
   "skills": {
-    "appwrite-cli": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
+    "supabase": {
+      "source": "supabase/agent-skills",
+      "commit": "c9be0e931b7930f7d02126d04774d904c381e7d7",
       "sourceType": "github",
-      "skillPath": "skills/appwrite-cli/SKILL.md",
-      "computedHash": "538134b1559b71df9b076834adc4cee1d8fc24285c660d8b4b13b8f8d6befaaa"
+      "skillPath": "skills/supabase/SKILL.md",
+      "computedHash": "2fbff32fd63b7d31585cacf0ed43e5bf8d05dd20d6c0c751d256cb967a00eec1"
     },
-    "appwrite-dart": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "commit": "c9be0e931b7930f7d02126d04774d904c381e7d7",
       "sourceType": "github",
-      "skillPath": "skills/appwrite-dart/SKILL.md",
-      "computedHash": "6d659b6f1ac99d6ea548ec8046042552e1b22e9c4c4c2953e21eb429bdaa902a"
-    },
-    "appwrite-dotnet": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-dotnet/SKILL.md",
-      "computedHash": "7c356503fa31abfdfa5e8745f92e5ad36d4ae866be4ee0f585a913332cefd6ec"
-    },
-    "appwrite-go": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-go/SKILL.md",
-      "computedHash": "0fa34c65ffbccd9126ad1bde9483e9127b75c11805beb43efe00f68af115add8"
-    },
-    "appwrite-kotlin": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-kotlin/SKILL.md",
-      "computedHash": "b561b5d6afa2caa964f41d21537bde78750aa6c131b1f0c8f36a776ce2ceca16"
-    },
-    "appwrite-php": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-php/SKILL.md",
-      "computedHash": "d72c6ed433d6330fe4522333551ce67d3c44d4cca9f2bdb62e702d985425ad20"
-    },
-    "appwrite-python": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-python/SKILL.md",
-      "computedHash": "66b44bc3b85f2c2e09ee76b811079d48abd7dacb7e581d1addea0ebd45950652"
-    },
-    "appwrite-review-learn": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-review-learn/SKILL.md",
-      "computedHash": "524c865b767f142a1a19f899ebeaa83f94c8da0e494d61476ae3086a30df49b6"
-    },
-    "appwrite-review-loop": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-review-loop/SKILL.md",
-      "computedHash": "afce83d71fdeea18ea649d81d2cee18358b33616e1481c23ab149bba5fc2a138"
-    },
-    "appwrite-review-setup": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-review-setup/SKILL.md",
-      "computedHash": "fc90573883e58206254a780bda42d74aebe798da82f1af2f6788802b6bd4d62b"
-    },
-    "appwrite-review-status": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-review-status/SKILL.md",
-      "computedHash": "8ed942898301d40fca50cc907d7ec8cc95633d202dc6245953258a1292129cc8"
-    },
-    "appwrite-review-threads": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-review-threads/SKILL.md",
-      "computedHash": "4df388b65386105109cbf40132e0d0d950558538e650def05691ab2aea0e837b"
-    },
-    "appwrite-ruby": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-ruby/SKILL.md",
-      "computedHash": "c7e76ef37117069dba39f9ab0589cf64b3f657802e9cb59d05c973542f3e0c94"
-    },
-    "appwrite-rust": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-rust/SKILL.md",
-      "computedHash": "6a49516431751385cc360369c876c5e5ffdf73b72336b6e2749bc09a9c32f308"
-    },
-    "appwrite-swift": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-swift/SKILL.md",
-      "computedHash": "b2d703c142bf2739daa053e7504b0ef9803e16d8a691dde9d78d44e774c54fc5"
-    },
-    "appwrite-typescript": {
-      "source": "appwrite/skills",
-      "commit": "4dda958d34c1124854085c91c0cec506396deb1c",
-      "sourceType": "github",
-      "skillPath": "skills/appwrite-typescript/SKILL.md",
-      "computedHash": "ca26d6de629fa2cc73213a7338eacbebf4183e2b4233591b9923cbfa4b1872bf"
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "computedHash": "3eb972c2d7c818e544e35cc33ea8d7147d4d78ae08142ef40037b0fbac7a2505"
     }
   }
 }

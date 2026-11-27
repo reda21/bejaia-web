@@ -66,6 +66,7 @@ export function DynamicBreadcrumbs() {
       'guide-pratique': t('nav.guide'),
       'a-propos': t('nav.about'),
       contact: t('nav.contact'),
+      todo: 'Démo Todo List',
     };
 
     const topLabel = staticLabels[first] ?? decodeURIComponent(first);
